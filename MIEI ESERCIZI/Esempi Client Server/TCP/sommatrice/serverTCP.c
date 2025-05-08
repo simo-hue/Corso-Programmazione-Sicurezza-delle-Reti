@@ -1,7 +1,7 @@
 #include "network.h"
 
 int main(void) {
-    int request, response;
+    int request, response = 0;
     socketif_t socket;
     connection_t connection;
     
@@ -18,16 +18,20 @@ int main(void) {
 
         // Fine del 3 way handshake
         printf("[SERVER] Connessione instaurata\n");
-        TCPReceive(connection, &request, sizeof(request));
+        
+        while(request != 0){
+            TCPReceive(connection, &request, sizeof(request));
 
-        // Elaboro la risposta ricevuta
-        printf("[SERVER] Ho ricevuto la seguente richiesta dal client: %d\n", request);
-        response = request + 1;
+            // Elaboro la risposta ricevuta
+            printf("[SERVER] Somma parziale per il client: %d\n", request);
+            response += request;
 
-        // Mando la risposta
-        printf("[SERVER] Invio la risposta al client\n");
-        TCPSend(connection, &response, sizeof(response));
+            // Mando la risposta
+            printf("[SERVER] Invio la risposta al client\n");
+            TCPSend(connection, &response, sizeof(response));
+        }
 
+        printf("Somma totale inviata, posso chiudere la connessione\n");
         // Chiudo la connessione ( SEMPRE )
         closeConnection(connection);
     }
