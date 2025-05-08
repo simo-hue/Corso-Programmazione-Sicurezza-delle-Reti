@@ -1,0 +1,17 @@
+Su Mac/Linux, il sistema operativo non permette che due processi UDP si leghino alla stessa porta locale
+
+
+📚 Conclusione didattica
+Questo esercizio dimostra che in un server UDP semplice e stateless:
+
+La variabile somma è condivisa tra tutti i client.
+Il server non distingue l’origine dei messaggi.
+Non si garantisce isolamento tra le sessioni dei diversi client.
+
+🔐 Come evitare questa interferenza?
+Per isolare le somme per ciascun client servirebbe:
+
+- Identificare ogni client (es. tramite hostAddress e port).
+- Mantenere un dizionario (es. map<string, int>) che associa client → somma.
+- Restituire la somma giusta al client quando invia 0.
+- Oppure, si può usare TCP, dove ogni client ha una connessione dedicata e il server può associare lo stato alla connessione.

@@ -1,0 +1,23 @@
+La somma finale letta è corretta?
+
+- Dal punto di vista del client:
+    - Tu hai digitato 2345, 5187, 2, e 1. Ti aspetti come risultato: 2345 + 5187 + 2 + 1 = 7535
+    - Ma hai ricevuto invece: 7533
+
+- Dal punto di vista del server:
+La somma è corretta perché il server non ha mai ricevuto il numero "2".
+Dunque, dal punto di vista dell'applicazione non è corretta secondo le aspettative dell'utente, ma è corretta rispetto ai dati effettivamente ricevuti dal server.
+
+Conclusione didattica dell'esercizio:
+
+L'obiettivo di questo esercizio è dimostrare chiaramente che:
+
+UDP non gestisce automaticamente la perdita dei dati.
+Se i pacchetti vengono persi a causa di interruzioni della rete, il server non lo saprà mai, e non esistono meccanismi automatici di recupero o notifica.
+Soluzione pratica (se volessi avere garanzia della consegna):
+
+Dovresti usare TCP, un protocollo connection-oriented e affidabile, che gestisce:
+
+Ritrasmissioni automatiche.
+Garanzia di consegna e ordine.
+Con TCP, anche staccando e riattaccando il cavo, il client sa se i pacchetti arrivano o meno e li ritrasmette automaticamente in caso di errore.
