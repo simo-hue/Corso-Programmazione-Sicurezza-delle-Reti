@@ -1,0 +1,9 @@
+Lanciare due volte il server usando due terminali. Cosa si osserva? Funzionano entrambi?
+Risposta: No, il secondo server TCP non può partire sulla stessa porta.
+
+Errore tipico:
+    bind: Address already in use
+Motivo tecnico:
+    La bind() su una porta già occupata da un altro processo fallisce, perché solo un server può ascoltare su una porta TCP specifica (es. 35000) alla volta.
+
+🧠 Concetto teorico: TCP crea una connessione uno-a-uno tra client e server. Il server può accettare molte connessioni, ma solo una listen() per porta è ammessa.

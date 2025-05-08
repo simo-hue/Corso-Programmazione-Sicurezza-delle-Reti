@@ -1,0 +1,11 @@
+Risultato:
+TCP si accorge dell’interruzione di rete → connessione chiusa.
+La somma non è completata.
+Il client può ricevere:
+errore: connection reset by peer
+🔐 TCP garantisce affidabilità, ma:
+
+se la connessione viene interrotta troppo a lungo, viene terminata.
+🧠 Conclusione:
+    TCP protegge dai pacchetti persi, ma non può resistere a disconnessioni prolungate.
+    La somma potrebbe non arrivare affatto, oppure risultare incompleta.
