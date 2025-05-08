@@ -4,22 +4,26 @@
 #include <pthread.h>
 #include <stdint.h>
 
+int counterGlobal = 0;
+
 void *gestisci_client(void *arg) {
+    int counter = counterGlobal + 1;
+    counterGlobal++;
     connection_t conn = (connection_t)(intptr_t)arg;
     int request, somma = 0;
 
-    printf("[SERVER] Nuovo client connesso.\n");
+    printf("[SERVER ( %d ) ] Nuovo client connesso.\n", counter);
 
     while (1) {
         if (TCPReceive(conn, &request, sizeof(request)) <= 0) break;
         if (request == 0) break;
         somma += request;
-        printf("[SERVER] Ricevuto: %d → somma = %d\n", request, somma);
+        printf("[SERVER ( %d ) ] Ricevuto: %d → somma = %d\n", counter, request, somma);
     }
 
     TCPSend(conn, &somma, sizeof(somma));
     closeConnection(conn);
-    printf("[SERVER] Connessione chiusa, somma inviata: %d\n", somma);
+    printf("[SERVER ( %d ) ] Connessione chiusa, somma inviata: %d\n", counter, somma);
     return NULL;
 }
 
