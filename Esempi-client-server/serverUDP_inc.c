@@ -1,3 +1,5 @@
+// Per eseguirlo: gcc network.c serverUDP.c -o serverUDP -lpthread
+
 #include "network.h"
 
 int main(void) {
@@ -7,6 +9,7 @@ int main(void) {
     char hostAddress[MAXADDRESSLEN];
     int port;
     
+    // Inizializzazione dell’interfaccia socket sulla porta 20000
     socket = createUDPInterface(35000);
     
     printf("[SERVER] Sono in attesa di richieste da qualche client\n");
