@@ -1,0 +1,23 @@
+<!-- 
+   vado a rimuovere il limite di lunghezza -> il form è un post, quindi non c'è limite di lunghezza:
+   stabilito ad esempio da :
+                              - MTU nel server
+-->
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Sommatrice web POST</h2>
+
+<form action="http://127.0.0.1:8000/sommatrice" target="_blank" method="post">
+  <label>Operando 1:</label><br>
+  <input type="text" name="op1"><br>
+  <label>Operando 2:</label><br>
+  <input type="text" name="op2"><br><br>
+  <input type="submit" value="Somma">
+</form>
+
+</body>
+</html>
+
