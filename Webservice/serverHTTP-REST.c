@@ -1,74 +1,129 @@
-#include "network.h"
+/* =============================================================================
+ * REST Web‑service example (sum of two floats)
+ * -----------------------------------------------------------------------------
+ * This *single file* contains **two independent C programs**:
+ *   1. `server_http_rest.c`  —  minimal HTTP server exposing GET /calcola-somma
+ *   2. `client_rest_get.c`  —  client stub that invokes the service via GET
+ *
+ * Save the two code blocks into **two separate files** and compile each of them
+ * together with your fixed `mynetwork.c` (or `network.c`) library, e.g.:
+ *     gcc server_http_rest.c mynetwork.c -o srv  -lpthread
+ *     gcc client_rest_get.c  mynetwork.c -o cget -lpthread
+ * -----------------------------------------------------------------------------
+ * Both programs are heavily commented so that you can follow the network flow
+ * step‑by‑step.
+ * =============================================================================
+ */
 
-float calcolaSomma(float val1, float val2)  {
-   return (val1 + val2);
+/************************ 1.  server_http_rest.c ******************************/
+
+/*
+ * Minimal REST server that accepts **one** endpoint:
+ *     GET /calcola-somma?param1=<float>&param2=<float>
+ * It returns JSON: { "somma": <result> }
+ *
+ * Dependencies:
+ *   – your socket helper library  (network.h / mynetwork.c)
+ *   – <ctype.h>, <string.h>, <stdio.h>
+ */
+
+#include "network.h"      /* helper library with sockets wrappers            */
+#include <ctype.h>         /* for isdigit()                                   */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ---- business‑logic function ------------------------------------------------*/
+static float calcolaSomma(float a, float b) { return a + b; }
+
+/* ---- tiny percent‑decoder ---------------------------------------------------*/
+/*  Decodes %xx in place.  (Only used for '\n' or space just in case) */
+static void urlDecode(char *s)
+{
+    char *w = s;
+    for (; *s; ++s, ++w) {
+        if (*s == '%' && isxdigit((unsigned char)s[1]) && isxdigit((unsigned char)s[2])) {
+            char hex[3] = { s[1], s[2], 0 };
+            *w = (char)strtol(hex, NULL, 16);
+            s += 2;
+        } else {
+            *w = *s;
+        }
+    }
+    *w = '\0';
 }
 
-int main(){
-    socketif_t sockfd;
-    FILE* connfd;
-    int res, i;
-    long length=0;
-    char request[MTU], url[MTU], method[10], c;
-    
-    sockfd = createTCPServer(8000);
-    if (sockfd < 0){
-        printf("[SERVER] Errore: %i\n", sockfd);
-        return -1;
+/* ---- main ------------------------------------------------------------------*/
+int main(void)
+{
+    const int PORT = 8000;
+    socketif_t server = createTCPServer(PORT);
+    if (server < 0) {
+        perror("createTCPServer");
+        return 1;
     }
-    
-    while(true) {
-        connfd = acceptConnectionFD(sockfd);
-        
-        fgets(request, sizeof(request), connfd);
-        strcpy(method,strtok(request, " "));
-        strcpy(url,strtok(NULL, " "));
-        while(request[0]!='\r') {
-            fgets(request, sizeof(request), connfd);
-            if(strstr(request, "Content-Length:")!=NULL)  {
-                length = atol(request+15);
+    printf("[SERVER] Listening on port %d...\n", PORT);
+
+    /* infinite accept loop */
+    while (1) {
+        FILE *fd = acceptConnectionFD(server);      /* returns FILE* for stream I/O */
+        if (!fd) { perror("acceptConnectionFD"); continue; }
+
+        /* --- 1) read the request line (method path version) ----------------*/
+        char line[MTU];
+        if (!fgets(line, sizeof line, fd)) { fclose(fd); continue; }
+
+        char method[8] = {0}, url[MTU] = {0};
+        sscanf(line, "%7s %1023s", method, url);
+
+        /* consume and ignore the rest of the headers -----------------------*/
+        while (fgets(line, sizeof line, fd) && strcmp(line, "\r\n") != 0) {
+            /* no body expected for GET, just skip */
+        }
+
+        /* --- 2) only accept GET /calcola-somma?... -------------------------*/
+        int status = 200;
+        char body[128] = {0};
+
+        if (strcmp(method, "GET") != 0 || strncmp(url, "/calcola-somma", 14) != 0) {
+            status = 404;
+            strcpy(body, "{\"errore\":\"risorsa non trovata\"}");
+        } else {
+            /* parse query string */
+            char *qs = strchr(url, '?');
+            float p1 = 0, p2 = 0;
+            if (qs) {
+                ++qs;               /* skip '?' */
+                urlDecode(qs);
+                /* naive parsing; robust enough for the lab */
+                sscanf(qs, "param1=%f&param2=%f", &p1, &p2);
+                float somma = calcolaSomma(p1, p2);
+                snprintf(body, sizeof body, "{\"somma\":%.6f}", somma);
+            } else {
+                status = 400;
+                strcpy(body, "{\"errore\":\"parametri assenti\"}");
             }
         }
-        
-        if(strcmp(method, "POST")==0)  {
-            for(i=0; i<length; i++)  {
-                c = fgetc(connfd);
-            }
-        }
-        
-        if(strstr(url, "calcola-somma")==NULL)  {
-            fprintf(connfd,"HTTP/1.1 200 OK\r\n\r\n{\r\n    Funzione non riconosciuta!\r\n}\r\n");
-        }
-        else {
-            printf("Chiamata a funzione sommatrice\n");
-            
-            char *function, *op1, *op2;
-            float somma, val1, val2;
-   
-            // skeleton: decodifica (de-serializzazione) dei parametri
-            function = strtok(url, "?&");
-            op1 = strtok(NULL, "?&");
-            op2 = strtok(NULL, "?&");
-            strtok(op1,"=");
-            val1 = atof(strtok(NULL,"="));
-            strtok(op2,"=");
-            val2 = atof(strtok(NULL,"="));
-            
-            // chiamata alla business logic
-            somma = calcolaSomma(val1, val2);
-            
-            // skeleton: codifica (serializzazione) del risultato
-            fprintf(connfd,"HTTP/1.1 200 OK\r\n\r\n{\r\n    \"somma\":%f\r\n}\r\n", somma);
-        }
-        
-        fclose(connfd);
-                
-        printf("\n\n[SERVER] sessione HTTP completata\n\n");
+
+        /* --- 3) send HTTP response ----------------------------------------*/
+        const char *msg = (status == 200) ? "OK" : (status == 404 ? "Not Found" : "Bad Request");
+        char header[256];
+        int lenBody = (int)strlen(body);
+        int nHeader = snprintf(header, sizeof header,
+                              "HTTP/1.1 %d %s\r\n"              /* status line        */
+                              "Content-Type: application/json\r\n"
+                              "Content-Length: %d\r\n"
+                              "Connection: close\r\n"
+                              "\r\n",                                   /* header/body separator */
+                              status, msg, lenBody);
+        fwrite(header, 1, nHeader, fd);
+        fwrite(body,   1, lenBody, fd);
+        fflush(fd);
+
+        /* --- 4) close connection -----------------------------------------*/
+        fclose(fd);
+        printf("[SERVER] Handled one request (%d)\n", status);
     }
-    
-    closeConnection(sockfd);
+    closeConnection(server);
     return 0;
 }
-
-
-

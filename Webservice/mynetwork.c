@@ -214,14 +214,17 @@ int doHTTPRequest(char *host, int port, char *request, char *response, int respL
     
     TCPSend(connID, request, strlen(request));
     
-    received = TCPReceive(connID, response, MTU);
+    received = TCPReceive(connID, response, respLen-1);   /* spazio per '\0' */
+     if (received < 0) { closeConnection(connID); return ERRTIME; }
+     response[received] = '\0';
+
     if (received > respLen){
         exit(ERRLEN);
         closeConnection(connID);
     }
     
     closeConnection(connID);
-    return SUCCESS;
+    return received;
 }
 
 int doGET(char *url, char *response, int respLen){
@@ -229,14 +232,20 @@ int doGET(char *url, char *response, int respLen){
     int port;
     int status = sscanf(url,"%*[^:]%*[:/]%[^:]:%d%s", ip_addr, &port, path);
     int n = createHTTPRequest(GET, path, NULL, request, MTU);
-    n = doHTTPRequest(ip_addr, port, request, response, respLen);
     
-    char code[3];
+    n = doHTTPRequest(ip_addr, port, request, response, respLen);
+    if (n < 14) return ERRLEN;           /* header troppo corto => esci pulito */
+    
+    char code[4];
     code[0] = response[9];
     code[1] = response[10];
     code[2] = response[11];  
+    code[3] = '\0'; // remove '\r\n\r\n
     status = atoi(code);
     
+    status = 0;
+    sscanf(response, "HTTP/%*d.%*d %3d", &status);  /* estrae 200,404,… */
+
     char *data = strstr(response, "\r\n\r\n" );
     if ( data == NULL )
         exit(ERRNOBODY);    
@@ -252,10 +261,11 @@ int doPOST(char *url, char *body, char *response, int respLen){
     int n = createHTTPRequest(POST, path, body, request, MTU);
     n = doHTTPRequest(ip_addr, port, request, response, respLen);
     
-    char code[3];
+    char code[4];
     code[0] = response[9];
     code[1] = response[10];
     code[2] = response[11];  
+    code[3] = '\0'; // remove '\r\n\r\n 
     status = atoi(code);
     
     char *data = strstr(response, "\r\n\r\n" );
@@ -273,10 +283,11 @@ int doPUT(char *url, char *body, char *response, int respLen){
     int n = createHTTPRequest(PUT, path, body, request, MTU);   //crea e mette in request la richiesta HTTP
     n = doHTTPRequest(ip_addr, port, request, response, respLen);   //effettua la richiesta HTTP tramite i socket verso i parametri specificati
     
-    char code[3];
+    char code[4];
     code[0] = response[9];
     code[1] = response[10];
     code[2] = response[11];  
+    code[3] = '\0'; // remove '\r\n\r\n 
     status = atoi(code);
     
     char *data = strstr(response, "\r\n\r\n" );
@@ -294,10 +305,11 @@ int doDELETE(char *url, char *response, int respLen){
     int n = createHTTPRequest(DEL, path, NULL, request, MTU);   //crea e mette in request la richiesta HTTP
     n = doHTTPRequest(ip_addr, port, request, response, respLen);   //effettua la richiesta HTTP tramite i socket verso i parametri specificati
     
-    char code[3];
+    char code[4];
     code[0] = response[9];
     code[1] = response[10];
     code[2] = response[11];  
+    code[3] = '\0'; // remove '\r\n\r\n 
     status = atoi(code);
     
     char *data = strstr(response, "\r\n\r\n" );
