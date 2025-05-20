@@ -13,6 +13,9 @@ class ClientREST
         else if(args[0].equals("calcola-somma")) {
             System.out.println("Risultato: " + service1.calcolaSomma(Float.parseFloat(args[1]), Float.parseFloat(args[2])));
         }
+        else if(args[0].equals("numeri-primi")) {
+            System.out.println("Risultato: " + service1.primeNumber(Float.parseFloat(args[1]), Float.parseFloat(args[2])));
+        }
     }
 }
 
@@ -61,4 +64,40 @@ class RESTAPI
         return (float)risultato;
     }    
 
+    float primeNumber(float val1, float val2)  {
+
+        URL u = null;
+        float risultato=0;
+        int i;
+
+        try 
+        { 
+            u = new URL("http://"+server+":8000/numeri-primi?param1="+val1+"&param2="+val2);
+            System.out.println("URL aperto: " + u);
+        }
+        catch (MalformedURLException e) 
+        {
+            System.out.println("URL errato: " + u);
+        }
+
+        try 
+        {
+            URLConnection c = u.openConnection();
+            c.connect();
+            BufferedReader b = new BufferedReader(new InputStreamReader(c.getInputStream()));
+            System.out.println("Lettura dei dati...");
+            String s;
+            while( (s = b.readLine()) != null ) {
+                System.out.println(s);
+                if((i = s.indexOf("primi"))!=-1)
+                    risultato = Float.parseFloat(s.substring(i+7));
+            }
+        }
+        catch (IOException e) 
+        {
+            System.out.println(e.getMessage());
+        }
+    
+        return (float)risultato;
+    }
 }

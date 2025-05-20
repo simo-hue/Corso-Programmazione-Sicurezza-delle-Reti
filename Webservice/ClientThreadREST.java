@@ -27,6 +27,9 @@ class RESTAPI extends Thread
         if(service.equals("calcola-somma"))    {
             System.out.println("Risultato: " + calcolaSomma(Float.parseFloat(param1), Float.parseFloat(param2)));
         }
+        else if(service.equals("numeri-primi"))    {
+            System.out.println("Risultato: " + primeNumber(Float.parseFloat(param1), Float.parseFloat(param2)));
+        }
         else    {
             System.out.println("Servizio non disponibile!");
         }
@@ -77,4 +80,41 @@ class RESTAPI extends Thread
         return (float)risultato;
     }    
 
+    synchronized float primeNumber(float val1, float val2)  {
+
+        URL u = null;
+        float risultato=0;
+        int i;
+
+    
+        try 
+        { 
+            u = new URL("http://"+server+":8000/numeri-primi?param1="+val1+"&param2="+val2);
+            System.out.println("URL aperto: " + u);
+        }
+        catch (MalformedURLException e) 
+        {
+            System.out.println("URL errato: " + u);
+        }
+
+        try 
+        {
+            URLConnection c = u.openConnection();
+            c.connect();
+            BufferedReader b = new BufferedReader(new InputStreamReader(c.getInputStream()));
+            System.out.println("Lettura dei dati...");
+            String s;
+            while( (s = b.readLine()) != null ) {
+                System.out.println(s);
+                if((i = s.indexOf("primi"))!=-1)
+                    risultato = Float.parseFloat(s.substring(i+7));
+            }
+        }
+        catch (IOException e) 
+        {
+            System.out.println(e.getMessage());
+        }
+    
+        return (float)risultato;
+    } 
 }
