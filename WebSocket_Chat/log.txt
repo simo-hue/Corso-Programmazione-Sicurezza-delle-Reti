@@ -1,0 +1,293 @@
+# npm audit report
+
+deep-extend  <=0.5.0
+Prototype Pollution - https://npmjs.com/advisories/612
+fix available via `npm audit fix`
+node_modules/deep-extend
+  rc  0.1.0 - 1.2.6
+  Depends on vulnerable versions of deep-extend
+  Depends on vulnerable versions of ini
+  Depends on vulnerable versions of minimist
+  node_modules/rc
+    registry-auth-token  
+    Depends on vulnerable versions of rc
+    node_modules/registry-auth-token
+      package-json  1.0.1 - 1.0.2 || 5.0.0
+      Depends on vulnerable versions of registry-auth-token
+      Depends on vulnerable versions of registry-url
+      node_modules/package-json
+        latest-version  
+        Depends on vulnerable versions of package-json
+        node_modules/latest-version
+          update-notifier  0.6.3 - 1.0.3 || 2.3.0 - 3.0.1
+          Depends on vulnerable versions of configstore
+          Depends on vulnerable versions of is-installed-globally
+          Depends on vulnerable versions of latest-version
+          node_modules/update-notifier
+            nodemon  1.14.11 - 2.0.2
+            Depends on vulnerable versions of chokidar
+            Depends on vulnerable versions of update-notifier
+            node_modules/nodemon
+    registry-url  2.0.0 - 3.0.2
+    Depends on vulnerable versions of rc
+    node_modules/registry-url
+
+dot-prop  <4.2.1 || >=5.0.0 <5.1.1
+Severity: high
+Prototype Pollution - https://npmjs.com/advisories/1213
+fix available via `npm audit fix`
+node_modules/dot-prop
+  configstore  2.0.0 - 2.1.0 || 3.1.3
+  Depends on vulnerable versions of dot-prop
+  node_modules/configstore
+    update-notifier  0.6.3 - 1.0.3 || 2.3.0 - 3.0.1
+    Depends on vulnerable versions of configstore
+    Depends on vulnerable versions of is-installed-globally
+    Depends on vulnerable versions of latest-version
+    node_modules/update-notifier
+      nodemon  1.14.11 - 2.0.2
+      Depends on vulnerable versions of chokidar
+      Depends on vulnerable versions of update-notifier
+      node_modules/nodemon
+
+ini  <1.3.6
+Prototype Pollution - https://npmjs.com/advisories/1589
+fix available via `npm audit fix`
+node_modules/fsevents/node_modules/ini
+node_modules/ini
+  global-dirs  
+  Depends on vulnerable versions of ini
+  node_modules/global-dirs
+    is-installed-globally  0.2.0
+    Depends on vulnerable versions of global-dirs
+    node_modules/is-installed-globally
+      update-notifier  0.6.3 - 1.0.3 || 2.3.0 - 3.0.1
+      Depends on vulnerable versions of configstore
+      Depends on vulnerable versions of is-installed-globally
+      Depends on vulnerable versions of latest-version
+      node_modules/update-notifier
+        nodemon  1.14.11 - 2.0.2
+        Depends on vulnerable versions of chokidar
+        Depends on vulnerable versions of update-notifier
+        node_modules/nodemon
+  rc  0.1.0 - 1.2.6
+  Depends on vulnerable versions of deep-extend
+  Depends on vulnerable versions of ini
+  Depends on vulnerable versions of minimist
+  node_modules/rc
+    registry-auth-token  
+    Depends on vulnerable versions of rc
+    node_modules/registry-auth-token
+      package-json  1.0.1 - 1.0.2 || 5.0.0
+      Depends on vulnerable versions of registry-auth-token
+      Depends on vulnerable versions of registry-url
+      node_modules/package-json
+        latest-version  
+        Depends on vulnerable versions of package-json
+        node_modules/latest-version
+    registry-url  2.0.0 - 3.0.2
+    Depends on vulnerable versions of rc
+    node_modules/registry-url
+
+kind-of  6.0.0 - 6.0.2
+Validation Bypass - https://npmjs.com/advisories/1490
+fix available via `npm audit fix`
+node_modules/kind-of
+  is-accessor-descriptor  
+  Depends on vulnerable versions of kind-of
+  node_modules/base/node_modules/is-accessor-descriptor
+  node_modules/define-property/node_modules/is-accessor-descriptor
+  node_modules/extglob/node_modules/is-accessor-descriptor
+  node_modules/snapdragon-node/node_modules/is-accessor-descriptor
+    is-descriptor  1.0.2
+    Depends on vulnerable versions of is-accessor-descriptor
+    Depends on vulnerable versions of kind-of
+    node_modules/base/node_modules/is-descriptor
+    node_modules/define-property/node_modules/is-descriptor
+    node_modules/extglob/node_modules/is-descriptor
+    node_modules/snapdragon-node/node_modules/is-descriptor
+      define-property  >=2.0.1
+      Depends on vulnerable versions of is-descriptor
+      node_modules/base/node_modules/define-property
+      node_modules/define-property
+      node_modules/extglob/node_modules/define-property
+      node_modules/snapdragon-node/node_modules/define-property
+        base  >=0.7.0
+        Depends on vulnerable versions of cache-base
+        Depends on vulnerable versions of define-property
+        Depends on vulnerable versions of mixin-deep
+        node_modules/base
+          snapdragon  
+          Depends on vulnerable versions of base
+          node_modules/snapdragon
+            braces  2.2.0 - 2.3.2
+            Depends on vulnerable versions of snapdragon
+            Depends on vulnerable versions of snapdragon-node
+            node_modules/braces
+              chokidar  2.0.0 - 2.1.8
+              Depends on vulnerable versions of anymatch
+              Depends on vulnerable versions of braces
+              node_modules/chokidar
+                nodemon  1.14.11 - 2.0.2
+                Depends on vulnerable versions of chokidar
+                Depends on vulnerable versions of update-notifier
+                node_modules/nodemon
+            expand-brackets  
+            Depends on vulnerable versions of snapdragon
+            node_modules/expand-brackets
+              extglob  >=2.0.0
+              Depends on vulnerable versions of define-property
+              Depends on vulnerable versions of expand-brackets
+              Depends on vulnerable versions of snapdragon
+              node_modules/extglob
+        micromatch  3.1.6 - 3.1.10
+        Depends on vulnerable versions of define-property
+        Depends on vulnerable versions of kind-of
+        Depends on vulnerable versions of to-regex
+        node_modules/micromatch
+          anymatch  
+          Depends on vulnerable versions of micromatch
+          node_modules/anymatch
+        nanomatch  >=1.2.8
+        Depends on vulnerable versions of define-property
+        Depends on vulnerable versions of kind-of
+        node_modules/nanomatch
+        snapdragon-node  2.0.0 - 2.1.1
+        Depends on vulnerable versions of define-property
+        node_modules/snapdragon-node
+        to-regex  >=3.0.2
+        Depends on vulnerable versions of define-property
+        node_modules/to-regex
+  is-data-descriptor  
+  Depends on vulnerable versions of kind-of
+  node_modules/base/node_modules/is-data-descriptor
+  node_modules/define-property/node_modules/is-data-descriptor
+  node_modules/extglob/node_modules/is-data-descriptor
+  node_modules/snapdragon-node/node_modules/is-data-descriptor
+  use  
+  Depends on vulnerable versions of kind-of
+  node_modules/use
+
+minimist  <0.2.1 || >=1.0.0 <1.2.3
+Prototype Pollution - https://npmjs.com/advisories/1179
+fix available via `npm audit fix`
+node_modules/fsevents/node_modules/minimist
+node_modules/fsevents/node_modules/rc/node_modules/minimist
+node_modules/minimist
+  mkdirp  0.4.1 - 0.5.1
+  Depends on vulnerable versions of minimist
+  node_modules/fsevents/node_modules/mkdirp
+  rc  0.1.0 - 1.2.6
+  Depends on vulnerable versions of deep-extend
+  Depends on vulnerable versions of ini
+  Depends on vulnerable versions of minimist
+  node_modules/rc
+    registry-auth-token  
+    Depends on vulnerable versions of rc
+    node_modules/registry-auth-token
+      package-json  1.0.1 - 1.0.2 || 5.0.0
+      Depends on vulnerable versions of registry-auth-token
+      Depends on vulnerable versions of registry-url
+      node_modules/package-json
+        latest-version  
+        Depends on vulnerable versions of package-json
+        node_modules/latest-version
+          update-notifier  0.6.3 - 1.0.3 || 2.3.0 - 3.0.1
+          Depends on vulnerable versions of configstore
+          Depends on vulnerable versions of is-installed-globally
+          Depends on vulnerable versions of latest-version
+          node_modules/update-notifier
+            nodemon  1.14.11 - 2.0.2
+            Depends on vulnerable versions of chokidar
+            Depends on vulnerable versions of update-notifier
+            node_modules/nodemon
+    registry-url  2.0.0 - 3.0.2
+    Depends on vulnerable versions of rc
+    node_modules/registry-url
+
+mixin-deep  <=1.3.1 || 2.0.0
+Severity: high
+Prototype Pollution - https://npmjs.com/advisories/1013
+fix available via `npm audit fix`
+node_modules/mixin-deep
+  base  >=0.7.0
+  Depends on vulnerable versions of cache-base
+  Depends on vulnerable versions of define-property
+  Depends on vulnerable versions of mixin-deep
+  node_modules/base
+    snapdragon  
+    Depends on vulnerable versions of base
+    node_modules/snapdragon
+      braces  2.2.0 - 2.3.2
+      Depends on vulnerable versions of snapdragon
+      Depends on vulnerable versions of snapdragon-node
+      node_modules/braces
+        chokidar  2.0.0 - 2.1.8
+        Depends on vulnerable versions of anymatch
+        Depends on vulnerable versions of braces
+        node_modules/chokidar
+          nodemon  1.14.11 - 2.0.2
+          Depends on vulnerable versions of chokidar
+          Depends on vulnerable versions of update-notifier
+          node_modules/nodemon
+      expand-brackets  
+      Depends on vulnerable versions of snapdragon
+      node_modules/expand-brackets
+        extglob  >=2.0.0
+        Depends on vulnerable versions of define-property
+        Depends on vulnerable versions of expand-brackets
+        Depends on vulnerable versions of snapdragon
+        node_modules/extglob
+
+set-value  <=2.0.0 || 3.0.0
+Severity: high
+Prototype Pollution - https://npmjs.com/advisories/1012
+fix available via `npm audit fix`
+node_modules/set-value
+node_modules/union-value/node_modules/set-value
+  cache-base  0.7.0 - 1.0.0
+  Depends on vulnerable versions of set-value
+  Depends on vulnerable versions of union-value
+  node_modules/cache-base
+    base  >=0.7.0
+    Depends on vulnerable versions of cache-base
+    Depends on vulnerable versions of define-property
+    Depends on vulnerable versions of mixin-deep
+    node_modules/base
+      snapdragon  
+      Depends on vulnerable versions of base
+      node_modules/snapdragon
+        braces  2.2.0 - 2.3.2
+        Depends on vulnerable versions of snapdragon
+        Depends on vulnerable versions of snapdragon-node
+        node_modules/braces
+          chokidar  2.0.0 - 2.1.8
+          Depends on vulnerable versions of anymatch
+          Depends on vulnerable versions of braces
+          node_modules/chokidar
+            nodemon  1.14.11 - 2.0.2
+            Depends on vulnerable versions of chokidar
+            Depends on vulnerable versions of update-notifier
+            node_modules/nodemon
+        expand-brackets  
+        Depends on vulnerable versions of snapdragon
+        node_modules/expand-brackets
+          extglob  >=2.0.0
+          Depends on vulnerable versions of define-property
+          Depends on vulnerable versions of expand-brackets
+          Depends on vulnerable versions of snapdragon
+          node_modules/extglob
+  union-value  <=1.0.0 || 2.0.0
+  Depends on vulnerable versions of set-value
+  node_modules/union-value
+
+tar  <2.2.2 || >=3.0.0 <4.4.2
+Severity: high
+Arbitrary File Overwrite - https://npmjs.com/advisories/803
+fix available via `npm audit fix`
+node_modules/fsevents/node_modules/tar
+
+37 vulnerabilities (22 low, 15 high)
+
+To address all issues, run:
+  npm audit fix
