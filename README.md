@@ -68,6 +68,7 @@ gcc network.c clientTCP.c -o clientTCP -lpthread
 | **Esercitazione-MQTT-semplificata/** | Publisher/Subscriber MQTT con broker Mosquitto. |
 | **wireshark-analisi-rete/** | Tracce **.pcapng** commentate per lo studio dei protocolli. |
 | **MIEI ESERCIZI/** | Soluzioni personali agli esercizi di laboratorio. |
+| **PER ESAME/** | Soluzioni personali + COMMENTI ( Materiale da usare per l'esame ). |
 | **APPUNTI GOODNOTES/** | Appunti manoscritti in PDF esportati da GoodNotes. |
 | **LUCIDI/** | Slide del corso in PDF. |
 | **.vscode/** | Task e configurazioni per Visual Studio Code. |
