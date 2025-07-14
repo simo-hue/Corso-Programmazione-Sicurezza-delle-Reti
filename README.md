@@ -61,12 +61,8 @@ gcc network.c clientTCP.c -o clientTCP -lpthread
 ## Struttura delle cartelle
 | Cartella | Descrizione sintetica |
 |----------|-----------------------|
-| **Esempi-client-server/** | Programmi C di esempio per socket **UDP** e **TCP** basati su `network.[ch]`. |
-| **Esempi-web/** | Mini web‑server HTTP in C, pagine HTML di test, form _GET/POST_. |
-| **WebSocket_Chat/** | Chat realtime con WebSocket (server C / client HTML‑JS). |
-| **Webservice/** | Implementazioni RESTful con JSON, server `serverHTTP-REST.c` e client in C/Java. |
-| **Esercitazione-MQTT-semplificata/** | Publisher/Subscriber MQTT con broker Mosquitto. |
-| **wireshark-analisi-rete/** | Tracce **.pcapng** commentate per lo studio dei protocolli. |
+| **DOMANDE ESAME/** | Domande esami orali precedenti. |
+| **FILE FORNITI DAL PROF/** | File STOCK dal moodle del corso ( senza soluzioni ). |
 | **MIEI ESERCIZI/** | Soluzioni personali agli esercizi di laboratorio. |
 | **PER ESAME/** | Soluzioni personali + COMMENTI ( Materiale da usare per l'esame ). |
 | **APPUNTI GOODNOTES/** | Appunti manoscritti in PDF esportati da GoodNotes. |
@@ -151,4 +147,4 @@ Contatta l’autore prima di redistribuire in pubblico.
 ## Link Utili
 - **[Corso Moodle](https://moodledidattica.univr.it/course/view.php?id=20206)**
 - **[Panopto per video Registrazioni](https://univr.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=cc809fae-424b-40f2-b7a3-b2fa00ae8042&instance=MoodleDidattica)**
-- 
+- **[Scrivimi su Linkedin](https://www.linkedin.com/in/simonemattioli2003/)
