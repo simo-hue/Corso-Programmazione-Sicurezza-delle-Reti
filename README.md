@@ -142,7 +142,7 @@ Contatta l’autore prima di redistribuire in pubblico.
 
 ## Crediti
 - **Simone Mattioli** – Studente di Informatica, Università degli Studi di Verona | Anno corso 2024/2025
-- **Davide Quaglia** – Docente del corso, Università degli Studi di Verona
+- **Davide Quaglia** – Docente del corso ( e pure molto bravo ), Università degli Studi di Verona
 
 ## Link Utili
 - **[Corso Moodle](https://moodledidattica.univr.it/course/view.php?id=20206)**
