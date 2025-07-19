@@ -64,8 +64,8 @@ gcc network.c clientTCP.c -o clientTCP -lpthread
 | **DOMANDE ESAME/** | Domande esami orali precedenti. |
 | **FILE FORNITI DAL PROF/** | File STOCK dal moodle del corso ( senza soluzioni ). |
 | **MIEI ESERCIZI/** | Soluzioni personali agli esercizi di laboratorio. |
-| **PER ESAME/** | Soluzioni personali + COMMENTI ( Materiale da usare per l'esame ) -> COMMING SOON! ( 2,3 days). |
-| **APPUNTI GOODNOTES/** | Appunti manoscritti in PDF esportati da GoodNotes. |
+| **PER ESAME/** | Soluzioni personali + COMMENTI ( Materiale da usare per l'esame ) |
+| **APPUNTI GOODNOTES/** | Appunti manoscritti in PDF esportati da GoodNotes. -> COMMING SOON! ( 2,3 days). |
 | **LUCIDI/** | Slide del corso in PDF. |
 | **.vscode/** | Task e configurazioni per Visual Studio Code. |
 
