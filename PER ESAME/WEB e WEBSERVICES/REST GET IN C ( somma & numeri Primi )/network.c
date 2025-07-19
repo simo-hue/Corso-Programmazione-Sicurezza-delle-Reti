@@ -182,7 +182,7 @@ int createHTTPRequest(int method, char *path, char *body, char *request, int len
     }
     else if(method == POST){
         if (body!=NULL){
-            sprintf(request, "%s %s HTTP/1.1\r\nContent-Type: plain/text\r\nContent-Lenght: %li\r\n\r\n", "POST",path,strlen(body));
+            sprintf(request, "%s %s HTTP/1.1\r\nContent-Type: plain/text\r\nContent-Length: %li\r\n\r\n", "POST",path,strlen(body));
             strcat(request, body);
             return strlen(request)<len?strlen(request):ERRLEN;
         }
@@ -191,7 +191,7 @@ int createHTTPRequest(int method, char *path, char *body, char *request, int len
     }
     else if(method == PUT){
         if (body!=NULL){
-            sprintf(request, "%s %s HTTP/1.1\r\nContent-Type: plain/text\r\nContent-Lenght: %li\r\n\r\n", "PUT",path,strlen(body));
+            sprintf(request, "%s %s HTTP/1.1\r\nContent-Type: plain/text\r\nContent-Length: %li\r\n\r\n", "PUT",path,strlen(body));
             strcat(request, body);
             return strlen(request)<len?strlen(request):ERRLEN;
         }
@@ -240,9 +240,9 @@ int doGET(char *url, char *response, int respLen){
     char *data = strstr(response, "\r\n\r\n" );
     if ( data == NULL )
         exit(ERRNOBODY);    
-        data += 4;
-        strcpy(response, data);
-        return status;
+    data += 4;
+    strcpy(response, data);
+    return status;
 }
 
 int doPOST(char *url, char *body, char *response, int respLen){
