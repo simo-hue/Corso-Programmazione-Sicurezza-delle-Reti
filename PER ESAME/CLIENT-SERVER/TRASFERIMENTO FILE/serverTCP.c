@@ -2,13 +2,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+
+#define BUFFER_SIZE 4096  // Buffer per trasferimenti più efficienti -> 4KB alla Volta
 
 int main(void) {
-    char filename[100];
-    char byte;
+    char filename[256];
+    char buffer[BUFFER_SIZE];
     FILE *file;
     socketif_t socket;
     connection_t connection;
+    struct stat file_stat;
+    long file_size;
+    size_t bytes_read, total_sent = 0;
 
     // Predispongo il tutto per la connessione TCP
     socket = createTCPServer(35000);
@@ -17,15 +23,14 @@ int main(void) {
         return -1;
     }
 
-    // Sono pronto
-    printf("[SERVER] In attesa di connessione...\n");
+    printf("[SERVER] In attesa di connessione sulla porta 35000...\n");
     connection = acceptConnection(socket);
     
-    // 3-way handshake fatto
-    printf("[SERVER] Connessione instaurata\n");
+    printf("[SERVER] Connessione stabilita\n");
 
     // Ricevi il nome del file richiesto
-    if (TCPReceive(connection, filename, sizeof(filename)) <= 0) {
+    memset(filename, 0, sizeof(filename));
+    if (TCPReceive(connection, filename, sizeof(filename) - 1) <= 0) {
         printf("[SERVER] Errore nella ricezione del nome file.\n");
         closeConnection(connection);
         return -1;
@@ -33,23 +38,58 @@ int main(void) {
 
     printf("[SERVER] Richiesto il file: %s\n", filename);
 
-    // Apri il file da inviare
-    file = fopen(filename, "rb");  // binario per compatibilità
-    if (file == NULL) {
-        printf("[SERVER] Errore apertura file: %s\n", filename);
-        byte = -1;  // codice errore al client
-        TCPSend(connection, &byte, 1);
+    // Verifica se il file esiste e ottieni le sue dimensioni tramite STAT
+    if (stat(filename, &file_stat) != 0) {
+        printf("[SERVER] File non trovato: %s\n", filename);
+        
+        // Invia dimensione -1 per indicare errore
+        file_size = -1;
+        TCPSend(connection, &file_size, sizeof(file_size));
         closeConnection(connection);
         return -1;
     }
 
-    // Invia byte per byte
-    while (fread(&byte, 1, 1, file) == 1) {
-        if (TCPSend(connection, &byte, 1) <= 0) break;
+    file_size = file_stat.st_size;
+    printf("[SERVER] Dimensione file: %ld bytes\n", file_size);
+
+    // Invia la dimensione del file al client
+    if (TCPSend(connection, &file_size, sizeof(file_size)) <= 0) {
+        printf("[SERVER] Errore nell'invio della dimensione del file.\n");
+        closeConnection(connection);
+        return -1;
+    }
+
+    // Apri il file in modalità binaria
+    file = fopen(filename, "rb");
+    if (file == NULL) {
+        printf("[SERVER] Errore nell'apertura del file: %s\n", filename);
+        closeConnection(connection);
+        return -1;
+    }
+
+    // Invia il file a blocchi per maggiore efficienza
+    printf("[SERVER] Iniziando trasferimento...\n");
+    while ((bytes_read = fread(buffer, 1, BUFFER_SIZE, file)) > 0) {
+        if (TCPSend(connection, buffer, bytes_read) <= 0) {
+            printf("[SERVER] Errore durante l'invio dei dati.\n");
+            break;
+        }
+        total_sent += bytes_read;
+        
+        // Mostra progresso ogni 1MB trasferito
+        if (total_sent % (1024 * 1024) == 0) {
+            printf("[SERVER] Trasferiti %zu MB\n", total_sent / (1024 * 1024));
+        }
     }
 
     fclose(file);
-    printf("[SERVER] File inviato. Chiudo la connessione.\n");
+    
+    if (total_sent == file_size) {
+        printf("[SERVER] File trasferito completamente (%zu bytes). Chiudo la connessione.\n", total_sent);
+    } else {
+        printf("[SERVER] Trasferimento incompleto. Trasferiti %zu di %ld bytes.\n", total_sent, file_size);
+    }
+    
     closeConnection(connection);
     return 0;
 }
