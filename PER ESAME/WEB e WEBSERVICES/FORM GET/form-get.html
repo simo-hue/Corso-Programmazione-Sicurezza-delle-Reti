@@ -1,0 +1,30 @@
+<!-- Va attivato il serverHTTP.c -> gcc serverHTTP.c network.c -o server -lpthread
+
+    Noto che ci sono i parametri nell'URL -> http.request.method == "GET" && tcp.port == 8000
+    visto che viene utilizzato il metodo GET e non POST ( altrimenti sarebbero inseriti nel corpo della richiesta )
+    
+    Tramite Wireshark, applico il filtro: http.request.method == "POST" && tcp.port == 8000 e li posso vedere 
+-->
+
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>The method Attribute</h2>
+
+<p>This form will be submitted using the GET method:</p>
+
+<form action="http://localhost:8000/action" target="_blank" method="get">
+  <label for="fname">First name:</label><br>
+  <input type="text" id="fname" name="fname" value="Simone"><br>
+  <label for="lname">Last name:</label><br>
+  <input type="text" id="lname" name="lname" value="Mattioli"><br><br>
+  <input type="submit" value="Invia">
+</form>
+
+<p>After you submit, notice that the form values is visible in the address bar of the new browser tab.</p>
+
+</body>
+</html>
+

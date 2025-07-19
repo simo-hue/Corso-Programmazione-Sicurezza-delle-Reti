@@ -1,3 +1,8 @@
+// Eseguendo http://127.0.0.1:8000/ o su localhost NON cambia NULLA perchè entrambi puntano all’interfaccia di loopback 
+// Se provo ad aprire un ALTRO server NON FUNZIONA, perchè NON posso avere 2 processi sulla stessa PORTA dello Stesso dispositivo
+
+// PER WIRESHARK applico questo filtro: http && tcp.port == 8000
+
 #include "network.h"
 
 int main(){
