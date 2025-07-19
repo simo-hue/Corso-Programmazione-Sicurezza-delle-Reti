@@ -3,6 +3,14 @@
 //   2) GET numeri-primi a b   → stampa JSON + conteggio
 //   3) GET calcola-somma a b   → stampa JSON + somma
 
+/*
+    SU WIRESHARK applico questo filtro: http.request.method == "POST" && tcp.port == 8000
+
+    Posso lanciare:
+        - ./client-post numeri-primi 0 30
+        - ./client-post calcola-somma 10 30
+*/
+
 #include "network.h"
 
 /*********************** POST D'ORDINE DEMO ************************/ 
@@ -42,8 +50,8 @@ static void demoGetSum(float a, float b){
              "http://localhost:8000/calcola-somma?param1=%f&param2=%f", a, b);
 
     int status = doGET(url, response, sizeof(response));
-    printf("Status code: %d\n", status);
-    printf("JSON calcola-somma ricevuto:\n%s\n", response);
+    //printf("Status code: %d\n", status);
+    //printf("JSON calcola-somma ricevuto:\n%s\n", response);
 
     float somma = 0.0f;
     if(sscanf(response, "{ \"somma\": %f", &somma) == 1)
