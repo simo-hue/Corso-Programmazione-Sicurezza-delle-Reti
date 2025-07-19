@@ -1,3 +1,36 @@
+/*
+ * ========================================================================
+ * SERVER TCP PER TRASFERIMENTO FILE UNIVERSALE
+ * ========================================================================
+ * 
+ * Questo server TCP è progettato per trasferire qualsiasi tipo di file
+ * (testo, binario, eseguibili, immagini, video, etc.) mantenendo 
+ * l'integrità completa dei dati.
+ * 
+ * CARATTERISTICHE PRINCIPALI:
+ * - Trasferimento a blocchi (4KB) per massima efficienza
+ * - Invio preliminare della dimensione del file per controllo integrità
+ * - Gestione errori robusta con feedback dettagliato
+ * - Indicatori di progresso per file di grandi dimensioni
+ * - Compatibilità universale con tutti i tipi di file
+ * - Controllo esistenza file prima del trasferimento
+ * 
+ * PROTOCOLLO DI COMUNICAZIONE:
+ * 1. Il server accetta la connessione TCP
+ * 2. Riceve il nome del file richiesto dal client
+ * 3. Verifica l'esistenza del file e ne ottiene la dimensione
+ * 4. Invia la dimensione al client (-1 se errore)
+ * 5. Trasferisce il file a blocchi di 4KB
+ * 6. Chiude la connessione al completamento
+ * 
+ * PORTA: 35000
+ * BUFFER SIZE: 4096 bytes
+ * 
+ * NOTA: Utilizza modalità binaria per garantire la compatibilità
+ *       con tutti i formati di file.
+ * ========================================================================
+ */
+
 #include "network.h"
 #include <stdio.h>
 #include <stdlib.h>

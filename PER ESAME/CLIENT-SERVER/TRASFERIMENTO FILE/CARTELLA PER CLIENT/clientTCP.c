@@ -1,3 +1,36 @@
+/*
+ * ========================================================================
+ * CLIENT TCP PER DOWNLOAD FILE UNIVERSALE
+ * ========================================================================
+ * 
+ * Questo client TCP è progettato per scaricare qualsiasi tipo di file
+ * da un server compatibile, garantendo l'integrità completa dei dati
+ * e fornendo feedback dettagliato all'utente.
+ * 
+ * CARATTERISTICHE PRINCIPALI:
+ * - Ricezione a blocchi (4KB) per massima efficienza
+ * - Controllo dimensione file per verificare integrità
+ * - Indicatori di progresso percentuale durante il download
+ * - Gestione errori con messaggi informativi
+ * - Salvataggio sicuro con prefisso anti-sovrascrittura
+ * - Compatibilità universale con tutti i tipi di file
+ * 
+ * PROTOCOLLO DI COMUNICAZIONE:
+ * 1. Si connette al server TCP sulla porta specificata
+ * 2. Invia il nome del file da scaricare
+ * 3. Riceve la dimensione del file (controllo esistenza)
+ * 4. Scarica il file a blocchi verificando il progresso
+ * 5. Salva il file localmente con prefisso "downloaded_"
+ * 6. Chiude la connessione al completamento
+ * 
+ * SERVER: 127.0.0.1:35000 (modificabile nel codice)
+ * BUFFER SIZE: 4096 bytes
+ * 
+ * NOTA: I file vengono salvati con prefisso "downloaded_" per evitare
+ *       sovrascritture accidentali di file esistenti.
+ * ========================================================================
+ */
+
 #include "network.h"
 #include <stdio.h>
 #include <stdlib.h>
