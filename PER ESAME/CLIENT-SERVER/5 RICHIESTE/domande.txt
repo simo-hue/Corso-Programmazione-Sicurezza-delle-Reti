@@ -1,0 +1,25 @@
+1) Lanciare prima il server e poi il client. Cosa si osserva? Invertire la sequenza di lancio. Cosa si osserva?
+- Server prima e poi client:
+Il server si mette in ascolto sulla porta stabilita, attendendo richieste. 
+Quando il client viene avviato, esso invia un messaggio che il server riceve 
+correttamente, rispondendo poi con un messaggio di conferma.
+- Client prima e poi server:
+Con UDP, il client invia comunque il pacchetto senza attendere conferme. 
+Se il server non è ancora avviato, il pacchetto verrà perso perché nessuno 
+è in ascolto sulla porta. Non c'è alcun messaggio di errore o ritrasmissione 
+automatica.
+
+2) Sulle porte sopra alla 1023 non c'è nessun problema, non servono permessi specifici
+
+3) Al contrario però sulle porte sotto la 1023 servono i permessi d'amministratore e quindi si riscontra un errore se si prova ad avviare il server
+
+4) Sostituire "127.0.0.1" prima con "localhost" e poi con "pippo" e osservare cosa succede.
+Con localhost:
+Funziona normalmente poiché "localhost" viene risolto a 127.0.0.1 dal DNS locale.
+Con pippo:
+Si ottiene un errore di risoluzione DNS poiché non esiste un host con il nome "pippo" definito localmente o nel DNS.
+
+6) Lanciare due volte il server usando due terminali. Cosa si osserva? Funzionano entrambi?
+Il primo server si avvia normalmente, mentre il secondo restituisce un errore:
+    bind: Address already in use
+Due processi non possono ascoltare contemporaneamente sulla stessa porta.

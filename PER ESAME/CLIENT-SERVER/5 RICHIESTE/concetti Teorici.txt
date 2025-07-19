@@ -1,0 +1,16 @@
+Concetti teorici approfonditi:
+
+- UDP (User Datagram Protocol):
+    Protocollo a livello trasporto connectionless e non affidabile, ogni pacchetto è indipendente, non c'è garanzia di consegna, ordine o duplicazione.
+
+- Porte "well-known":
+    Da 0 a 1023, richiedono privilegi di amministratore per essere usate, spesso riservate per servizi standard (es. HTTP su porta 80).
+
+- Indirizzo IP (127.0.0.1) = localhost:
+    Speciale indirizzo loopback per testare client-server sulla stessa macchina.
+
+- Risoluzione DNS:
+    Risolve nomi (es. localhost) in indirizzi IP, errore con nomi inesistenti.
+
+- Errore "bind: Address already in use":
+    Si verifica quando due server cercano di legarsi alla stessa porta
