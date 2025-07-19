@@ -1,10 +1,3 @@
-/*
-    POSSO GESTIRE PIU' CLIENT IN CONCORRENZA
-    Ogni client viene gestito da un thread dedicato e per questo il valore somma non viene influenzato da altri client.
-    Ogni client può inviare più richieste, ma la connessione viene chiusa solo quando il client invia 0.
-    Il server risponde con la somma parziale ad ogni richiesta ricevuta.
-*/
-
 #include "network.h"
 #include <stdio.h>
 #include <stdlib.h>
