@@ -1,0 +1,23 @@
+<!--
+
+  METODO DEL POLLING offre un esperienza TRAUMATICA per l'utente, poiché la pagina si ricarica ogni secondo.
+
+  Sarebbe meglio sfruttare un approccio ASINCRONO o EVENT-DRIVEN ad esempio con WEB SOCKET
+
+-->
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<iframe id="area" height="2000" width="1000"></iframe>
+
+
+<script>
+  setInterval(() => {
+    document.getElementById("area").src = "https://www.ansa.it/sito/notizie/topnews/index.shtml";
+  }, 1000); // Refresh every second
+</script> 
+
+</body>
+</html>
