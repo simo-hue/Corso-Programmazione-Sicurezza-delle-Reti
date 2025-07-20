@@ -1,4 +1,4 @@
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Simone%20Mattioli-blue?style=for-the-badge&logo=linkedin)](www.linkedin.com/in/simonemattioli2003)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Simone%20Mattioli-blue?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/simonemattioli2003/)
 [![YouTube – Simo's Diary](https://img.shields.io/badge/YouTube-Simo's%20Diary-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/@SimosDiary2003)
 [![YouTube – Mountain Fauna](https://img.shields.io/badge/Mountain%20Fauna-YT-green?style=for-the-badge&logo=youtube)](https://www.youtube.com/@mountainfaunalover)
 [![Instagram Personal](https://img.shields.io/badge/@simo___one-Instagram-purple?style=for-the-badge&logo=instagram)](https://www.instagram.com/simo___one/)
