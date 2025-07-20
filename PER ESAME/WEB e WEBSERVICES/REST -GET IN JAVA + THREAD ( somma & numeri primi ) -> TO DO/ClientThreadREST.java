@@ -1,12 +1,10 @@
-// ClientThreadREST.java – versione definitiva (20 maggio 2025)
-// Esempio di client multithread che interroga due endpoint REST:
-//   • /calcola-somma                  → { "somma": <float> }
-//   • /numeri-primi                  → { "totale_numeri_primi": <int>, "primi": [ ... ] }
-// NIENTE librerie esterne: 100 % Java SE.
+/*
+
+    DA ScriVERe
+
+*/
 // -----------------------------------------------------------------------------
 // Compilazione:
-//     javac ClientThreadREST.java
-// Esecuzione (3 thread):
 //     java ClientThreadREST numeri-primi 1 50
 // -----------------------------------------------------------------------------
 

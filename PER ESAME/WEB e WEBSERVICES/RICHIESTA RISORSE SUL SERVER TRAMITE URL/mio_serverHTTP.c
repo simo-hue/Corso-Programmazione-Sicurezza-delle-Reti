@@ -1,3 +1,16 @@
+/*
+    RICORDARSI DI CAMBIARE PERCORSO ( nel caso non fossi in DOWNLOADS )
+
+    funzionamento -> http://localhost:8000/risorsa-che-voglio-ottenere 
+
+    Quindi faccio richieste con metodo GET
+
+    ESEMPI:
+        - http://localhost:8000/form-get.html
+        - http://localhost:8000/javascript.html
+
+*/
+
 // Eseguendo http://127.0.0.1:8000/ o su localhost NON cambia NULLA perchè entrambi puntano all’interfaccia di loopback 
 // Se provo ad aprire un ALTRO server NON FUNZIONA, perchè NON posso avere 2 processi sulla stessa PORTA dello Stesso dispositivo
 // PER WIRESHARK applico questo filtro: http && tcp.port == 8000
@@ -35,7 +48,10 @@ int main(){
         char *url_path = strtok(NULL, " ");
         if (url_path[0] == '/') url_path++; // rimuove lo slash iniziale
         char pathResponse[1024];
-        snprintf(pathResponse, sizeof(pathResponse), "/Users/simo/Downloads/%s", url_path);
+        
+        snprintf(pathResponse, sizeof(pathResponse), "/Users/simo/Downloads/ttt/Corso-Programmazione-Sicurezza-delle-Reti/PER ESAME/WEB e WEBSERVICES/RICHIESTA RISORSE SUL SERVER TRAMITE URL/%s", url_path);
+
+        printf("Path della risorsa richiesta: %s\n", pathResponse);
 
         // Faccio parsing degli header HTTP
         // Continua a leggere finché non trova una riga vuota (\r\n), che separa header da corpo.
@@ -45,13 +61,6 @@ int main(){
             if(strstr(request, "Content-Length:")!=NULL)  {
                 length = atol(request+15);
                 //printf("length %ld\n", length);
-            }
-        }
-        
-        if(strcmp(method, "POST")==0)  {
-            for(i=0; i<length; i++)  {
-                c = fgetc(connfd);
-                printf("%c", c);
             }
         }
         
