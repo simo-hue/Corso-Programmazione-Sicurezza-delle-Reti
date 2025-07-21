@@ -153,4 +153,5 @@ Contatta l’autore prima di redistribuire in pubblico.
 ## Link Utili
 - **[Corso Moodle](https://moodledidattica.univr.it/course/view.php?id=20206)**
 - **[Panopto per video Registrazioni](https://univr.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=cc809fae-424b-40f2-b7a3-b2fa00ae8042&instance=MoodleDidattica)**
+- **[Notebook](https://notebooklm.google.com/notebook/1d3c8cae-cd8c-4ed7-9b1b-d9baa4fee5d7)
 - **[Scrivimi su Linkedin](https://www.linkedin.com/in/simonemattioli2003/)
