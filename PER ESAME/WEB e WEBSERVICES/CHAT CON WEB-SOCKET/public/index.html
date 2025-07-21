@@ -1,0 +1,34 @@
+<!--
+
+    Fare partire con: nodemon server.js
+
+    Serve:
+          - Adapter for loopback traffic capture
+          - Filtro: "WebSocket" per catturare solo i messaggi del protocollo WebSocket
+
+-->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>WebSockets Chat</title>
+        <!-- Socket.IO v2 dal server -->
+        <script src="/socket.io/socket.io.js"></script>
+        <link href="/styles.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div id="mario-chat">
+            <h2>Chat</h2>
+            <div id="chat-window">
+                <div id="output"></div>
+                <div id="feedback"></div>
+            </div>
+            <h4 id="sender" style="padding-left: 20px">Handle</h4>
+            <input id="message" type="text" placeholder="Message" />
+            <button id="send">Send</button>
+        </div>
+    </body>
+    <script src="/chat.js"></script>
+</html>
+
