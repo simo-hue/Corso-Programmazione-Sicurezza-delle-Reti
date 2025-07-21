@@ -25,8 +25,10 @@ qui viene effettuato l'upgrade ad una connessione
 websocket e il server si mette in attesa degli
 eventi ai quali rispondere
 */
+
 var io = socket(server);
 io.on('connection', function(webSocket){
+   nsole.log('Arrivata una connessione HTTP, attendo upgrade a WebSocket');
 
    console.log('made webSocket connection', webSocket.id);
 
