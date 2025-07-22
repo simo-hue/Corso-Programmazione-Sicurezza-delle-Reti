@@ -81,7 +81,7 @@ int main(){
             }
         }
         
-        // Passo il BODY a sommatrice ( perchè li ci stanno i parametri ) -> Leggo il BODY
+        // Passo il BODY a sommatrice ( perchè li ci stanno i parametri con metodo POST ) -> Leggo il BODY
         if(strcmp(method, "POST")==0)  {
 
             printf("\n metodo POST identificato\n");
