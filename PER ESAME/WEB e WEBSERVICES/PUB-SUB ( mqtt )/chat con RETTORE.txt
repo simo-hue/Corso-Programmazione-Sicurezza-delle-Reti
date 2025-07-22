@@ -20,10 +20,28 @@ FILTRI PER WIRESHARK:
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+GERARCHIA TOPIC:
+                - universita/personale ---
+                                         |
+                                         -- > /docenti
+                                              /studenti
+                                            
+                - universita/amministrazione ---
+                                         |
+                                         -- > /rettore
+                                              /segreteria
+
 COMANDI:
-    TERMINALE(1) -> mosquitto_sub -h localhost -t chat/# ----------------------------------> RETTORE
-    TERMINALE(2) -> mosquitto_pub -h localhost -t chat/s1 -m "S1: Ciao come stai?" --------> STUDENTE 1
-    TERMINALE(3) -> mosquitto_pub -h localhost -t chat/s2 -m "S2: Io tutto bene, te?" -----> STUDENTE 2
+    TERMINALE(1) -> mosquitto_sub -h localhost -t universita/# ----------------------------------> RETTORE che legge TUTTO
+    TERMINALE(2) -> mosquitto_sub -h localhost -t universita/personale/# ----------------------------------> SEGRETERIA 1 che legge STUDENTI & DOCENTI
+    TERMINALE(3) -> mosquitto_sub -h localhost -t universita/personale/# ----------------------------------> SEGRETERIA 2 che legge STUDENTI & DOCENTI
+    TERMINALE(4) -> mosquitto_sub -h localhost -t universita/personale/# ----------------------------------> DOCENTE che legge STUDENTI & DOCENTI
+    TERMINALE(5) -> mosquitto_sub -h localhost -t universita/personale/studenti/# ----------------------------------> STUDENTE 1 che legge STUDENTI
+    TERMINALE(6) -> mosquitto_sub -h localhost -t universita/personale/studenti/# ----------------------------------> STUDENTE 2 che legge STUDENTI
+    TERMINALE(5) -> mosquitto_pub -h localhost -t universita/personale/studenti/s1 -m "STUDENTE 1: Ho copiato all'esame di PROGRAMMAZIONE SICUREZZA DELLE RETI, anche tu?" --------> STUDENTE 1
+    TERMINALE(6) -> mosquitto_pub -h localhost -t universita/personale/studenti/s2 -m "STUDENTE 2: Si si pure io e nessuno si è accorto" -----> STUDENTE 2
+    TERMINALE(2) -> mosquitto_pub -h localhost -t universita/personale/segreteria/s1 -m "SEGRETARIA 1: Bisogna annullare il voto di 2 studenti." -----> SEGRETARIA 1
+    TERMINALE(3) -> mosquitto_pub -h localhost -t universita/personale/segreteria/s2 -m "SEGRETARIA 2: Va bene, dimmi le matricole" -----> SEGRETARIA 2
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
