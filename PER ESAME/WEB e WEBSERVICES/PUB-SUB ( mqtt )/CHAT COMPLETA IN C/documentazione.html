@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat MQTT Universitaria - Documentazione Tecnica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .document {
+            max-width: 210mm;
+            margin: 20px auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white" opacity="0.1"/><circle cx="80" cy="40" r="1.5" fill="white" opacity="0.1"/><circle cx="40" cy="80" r="1" fill="white" opacity="0.1"/></svg>');
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin: 30px 0 20px 0;
+            font-size: 1.8em;
+        }
+
+        h3 {
+            color: #34495e;
+            margin: 25px 0 15px 0;
+            font-size: 1.3em;
+            border-left: 4px solid #e74c3c;
+            padding-left: 15px;
+        }
+
+        h4 {
+            color: #555;
+            margin: 20px 0 10px 0;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            border-left: 4px solid #4299e1;
+        }
+
+        .command {
+            background: #1a202c;
+            color: #68d391;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: monospace;
+            display: inline-block;
+            margin: 5px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tr:hover {
+            background: #e3f2fd;
+        }
+
+        .download-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        .flow-diagram {
+            background: #f8f9fa;
+            border: 2px dashed #6c5ce7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: monospace;
+        }
+
+        .role-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #e74c3c;
+        }
+
+        .role-card.rettore { border-left-color: #e74c3c; }
+        .role-card.segreteria { border-left-color: #f39c12; }
+        .role-card.docente { border-left-color: #27ae60; }
+        .role-card.studente { border-left-color: #3498db; }
+
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+
+        @media print {
+            body { background: white; }
+            .document { box-shadow: none; margin: 0; }
+            .download-btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <button class="download-btn" onclick="downloadPDF()">📄 Scarica PDF</button>
+    
+    <div class="document">
+        <div class="header">
+            <h1>🎓 Chat MQTT Universitaria</h1>
+            <div class="subtitle">Documentazione Tecnica Completa</div>
+            <div style="margin-top: 20px; font-size: 0.9em; opacity: 0.8;">
+                Implementazione Paradigma PUB/SUB con Mosquitto in C
+            </div>
+        </div>
+
+        <div class="content">
+            
+            <h2>📋 Indice</h2>
+            <ol>
+                <li><a href="#introduzione">Introduzione</a></li>
+                <li><a href="#architettura">Architettura del Sistema</a></li>
+                <li><a href="#installazione">Installazione e Configurazione</a></li>
+                <li><a href="#utilizzo">Guida all'Utilizzo</a></li>
+                <li><a href="#implementazione">Dettagli Implementativi</a></li>
+                <li><a href="#testing">Testing e Debug</a></li>
+                <li><a href="#sicurezza">Considerazioni sulla Sicurezza</a></li>
+                <li><a href="#troubleshooting">Risoluzione Problemi</a></li>
+            </ol>
+
+            <h2 id="introduzione">🚀 Introduzione</h2>
+            
+            <div class="info-box">
+                <h4>📡 Cos'è MQTT?</h4>
+                <p>MQTT (Message Queuing Telemetry Transport) è un protocollo di messaggistica leggero progettato per dispositivi con risorse limitate e reti con larghezza di banda ridotta. Utilizza il paradigma publish/subscribe per la comunicazione asincrona.</p>
+            </div>
+
+            <p>Questo progetto implementa un sistema di chat universitaria basato su MQTT che simula la comunicazione tra diversi ruoli accademici: Rettore, Segreteria, Docenti e Studenti. Il sistema utilizza una gerarchia di topic strutturata per gestire i permessi di accesso e la distribuzione dei messaggi.</p>
+
+            <h3>🎯 Obiettivi del Progetto</h3>
+            <ul>
+                <li>Implementare il paradigma PUB/SUB usando Mosquitto</li>
+                <li>Creare una gerarchia di permessi basata sui ruoli</li>
+                <li>Dimostrare la gestione delle connessioni e dei messaggi MQTT</li>
+                <li>Fornire un'interfaccia utente interattiva</li>
+                <li>Permettere l'analisi del traffico con Wireshark</li>
+            </ul>
+
+            <h2 id="architettura">🏗️ Architettura del Sistema</h2>
+
+            <h3>📊 Gerarchia dei Topic</h3>
+            <div class="flow-diagram">
+                universita/<br>
+                ├── personale/<br>
+                │   ├── docenti/<br>
+                │   │   └── [username]<br>
+                │   ├── studenti/<br>
+                │   │   └── [username]<br>
+                │   └── segreteria/<br>
+                │       └── [username]<br>
+                └── amministrazione/<br>
+                    └── rettore/<br>
+                        └── [username]
+            </div>
+
+            <h3>👥 Ruoli e Permessi</h3>
+
+            <div class="role-card rettore">
+                <h4>🎓 RETTORE</h4>
+                <p><strong>Sottoscrizione:</strong> <code>universita/#</code> (accesso completo)</p>
+                <p><strong>Pubblicazione:</strong> <code>universita/amministrazione/rettore/[username]</code></p>
+                <p><strong>Privilegi:</strong> Può leggere tutti i messaggi dell'università</p>
+            </div>
+
+            <div class="role-card segreteria">
+                <h4>📋 SEGRETERIA</h4>
+                <p><strong>Sottoscrizione:</strong> <code>universita/personale/#</code></p>
+                <p><strong>Pubblicazione:</strong> <code>universita/personale/segreteria/[username]</code></p>
+                <p><strong>Privilegi:</strong> Accesso a tutto il personale (docenti e studenti)</p>
+            </div>
+
+            <div class="role-card docente">
+                <h4>👨‍🏫 DOCENTE</h4>
+                <p><strong>Sottoscrizione:</strong> <code>universita/personale/#</code></p>
+                <p><strong>Pubblicazione:</strong> <code>universita/personale/docenti/[username]</code></p>
+                <p><strong>Privilegi:</strong> Può comunicare con altri docenti e studenti</p>
+            </div>
+
+            <div class="role-card studente">
+                <h4>🎒 STUDENTE</h4>
+                <p><strong>Sottoscrizione:</strong> <code>universita/personale/studenti/#</code></p>
+                <p><strong>Pubblicazione:</strong> <code>universita/personale/studenti/[username]</code></p>
+                <p><strong>Privilegi:</strong> Può comunicare solo con altri studenti</p>
+            </div>
+
+            <h3>🔄 Flusso dei Messaggi</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mittente</th>
+                        <th>Destinatari</th>
+                        <th>Topic</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Studente</td>
+                        <td>Altri Studenti, Docenti, Segreteria, Rettore</td>
+                        <td>universita/personale/studenti/[username]</td>
+                    </tr>
+                    <tr>
+                        <td>Docente</td>
+                        <td>Altri Docenti, Segreteria, Rettore</td>
+                        <td>universita/personale/docenti/[username]</td>
+                    </tr>
+                    <tr>
+                        <td>Segreteria</td>
+                        <td>Altre Segreterie, Rettore</td>
+                        <td>universita/personale/segreteria/[username]</td>
+                    </tr>
+                    <tr>
+                        <td>Rettore</td>
+                        <td>Tutti</td>
+                        <td>universita/amministrazione/rettore/[username]</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 id="installazione">⚙️ Installazione e Configurazione</h2>
+
+            <h3>📦 Prerequisiti</h3>
+            <ul>
+                <li>macOS con Homebrew installato</li>
+                <li>Compilatore GCC</li>
+                <li>Accesso terminale</li>
+            </ul>
+
+            <h3>🔧 Installazione Dipendenze</h3>
+            <div class="code-block">
+# Installa Mosquitto broker e librerie di sviluppo
+brew install mosquitto
+brew install mosquitto-dev
+
+# Verifica installazione
+mosquitto --help
+mosquitto_pub --help
+mosquitto_sub --help
+            </div>
+
+            <h3>📁 Struttura del Progetto</h3>
+            <div class="code-block">
+mqtt-chat/
+├── mqtt_chat.c          # Codice sorgente principale
+├── Makefile            # Build automation
+└── README.md           # Documentazione base
+            </div>
+
+            <h3>🛠️ Compilazione</h3>
+            <div class="code-block">
+# Compilazione standard
+make
+
+# Compilazione con debug
+make debug
+
+# Pulizia file compilati
+make clean
+
+# Installazione dipendenze
+make install-deps
+            </div>
+
+            <h2 id="utilizzo">📖 Guida all'Utilizzo</h2>
+
+            <h3>🚀 Avvio del Sistema</h3>
+
+            <h4>1. Avviare il Broker Mosquitto</h4>
+            <div class="code-block">
+# Avvio del servizio
+make start-broker
+# oppure
+brew services start mosquitto
+
+# Verifica stato
+make status-broker
+# oppure  
+brew services list | grep mosquitto
+            </div>
+
+            <h4>2. Avviare l'Applicazione</h4>
+            <div class="code-block">
+./mqtt_chat
+            </div>
+
+            <h3>🎮 Interfaccia Utente</h3>
+
+            <h4>Selezione Ruolo</h4>
+            <p>All'avvio, il programma richiede di scegliere il ruolo:</p>
+            <div class="code-block">
+=== SCEGLI IL TUO RUOLO ===
+1. Rettore (legge tutto)
+2. Segreteria (legge personale)  
+3. Docente (legge personale)
+4. Studente (legge solo studenti)
+Scelta [1-4]: 
+            </div>
+
+            <h4>Comandi Disponibili</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descrizione</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="command">/help</span></td>
+                        <td>Mostra l'elenco dei comandi disponibili</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">/quit</span></td>
+                        <td>Esce dall'applicazione</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">/status</span></td>
+                        <td>Mostra lo stato della connessione e il ruolo attivo</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">/topic</span></td>
+                        <td>Visualizza i topic di sottoscrizione e pubblicazione</td>
+                    </tr>
+                    <tr>
+                        <td><span class="command">[messaggio]</span></td>
+                        <td>Qualsiasi altro testo viene inviato come messaggio</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>🧪 Scenario di Test</h3>
+            <p>Per replicare lo scenario descritto nei tuoi commenti, apri 6 terminali:</p>
+
+            <div class="code-block">
+# Terminal 1 - Rettore
+./mqtt_chat
+→ Scegli ruolo: 1
+→ Username: rettore
+
+# Terminal 2 - Segreteria 1  
+./mqtt_chat
+→ Scegli ruolo: 2
+→ Username: segretaria1
+
+# Terminal 3 - Segreteria 2
+./mqtt_chat  
+→ Scegli ruolo: 2
+→ Username: segretaria2
+
+# Terminal 4 - Docente
+./mqtt_chat
+→ Scegli ruolo: 3  
+→ Username: prof_rossi
+
+# Terminal 5 - Studente 1
+./mqtt_chat
+→ Scegli ruolo: 4
+→ Username: mario_rossi
+
+# Terminal 6 - Studente 2  
+./mqtt_chat
+→ Scegli ruolo: 4
+→ Username: giulia_bianchi
+            </div>
+
+            <h2 id="implementazione">💻 Dettagli Implementativi</h2>
+
+            <h3>🏗️ Strutture Dati Principali</h3>
+
+            <div class="code-block">
+typedef struct {
+    struct mosquitto *mosq;           // Istanza client Mosquitto
+    user_role_t role;                 // Ruolo dell'utente
+    char username[MAX_USERNAME_LEN];  // Nome utente
+    char subscribe_topic[MAX_TOPIC_LEN]; // Topic sottoscrizione
+    char publish_base_topic[MAX_TOPIC_LEN]; // Topic pubblicazione base
+    int is_connected;                 // Stato connessione
+} mqtt_chat_client_t;
+            </div>
+
+            <h3>🔄 Callback Functions</h3>
+
+            <h4>Callback di Connessione</h4>
+            <ul>
+                <li>Gestisce il risultato della connessione al broker</li>
+                <li>Effettua automaticamente la sottoscrizione al topic appropriato</li>
+                <li>Aggiorna lo stato di connessione del client</li>
+            </ul>
+
+            <h4>Callback di Messaggio</h4>
+            <ul>
+                <li>Riceve e processa i messaggi in arrivo</li>
+                <li>Formatta l'output con timestamp e informazioni topic</li>
+                <li>Gestisce la visualizzazione asincrona dei messaggi</li>
+            </ul>
+
+            <h3>🔐 Gestione della Sicurezza</h3>
+            
+            <div class="warning-box">
+                <h4>⚠️ Limitazioni di Sicurezza Attuali</h4>
+                <p>Il sistema attuale non implementa crittografia end-to-end. I messaggi viaggiano in chiaro attraverso il broker MQTT. Per un ambiente di produzione, considerare:</p>
+                <ul>
+                    <li>Crittografia TLS per il trasporto</li>
+                    <li>Autenticazione utenti</li>
+                    <li>Crittografia application-level dei messaggi</li>
+                    <li>Controllo accesso basato su ACL</li>
+                </ul>
+            </div>
+
+            <h2 id="testing">🧪 Testing e Debug</h2>
+
+            <h3>🔍 Analisi con Wireshark</h3>
+            
+            <h4>Filtri Utili</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Filtro</th>
+                        <th>Descrizione</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>mqtt</code></td>
+                        <td>Mostra tutto il traffico MQTT</td>
+                    </tr>
+                    <tr>
+                        <td><code>mqtt.topic contains "chat"</code></td>
+                        <td>Filtra per topic contenenti "chat"</td>
+                    </tr>
+                    <tr>
+                        <td><code>mqtt and ip.addr == localhost</code></td>
+                        <td>Traffico MQTT verso/da localhost</td>
+                    </tr>
+                    <tr>
+                        <td><code>mqtt.msgtype == 3</code></td>
+                        <td>Solo messaggi PUBLISH</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Osservazioni sul Traffico</h4>
+            <ul>
+                <li><strong>Keep Alive:</strong> Pacchetti PING regolari per mantenere connessione NAT</li>
+                <li><strong>Publisher Pattern:</strong> Connessione → Pubblicazione → Disconnessione</li>
+                <li><strong>Subscriber Pattern:</strong> Connessione persistente con keep-alive</li>
+                <li><strong>QoS Levels:</strong> Il sistema usa QoS 0 (at most once delivery)</li>
+            </ul>
+
+            <h3>🐛 Debug e Logging</h3>
+
+            <h4>Compilazione Debug</h4>
+            <div class="code-block">
+make debug
+            </div>
+
+            <h4>Debugging con GDB</h4>
+            <div class="code-block">
+gdb ./mqtt_chat
+(gdb) run
+(gdb) break on_message
+(gdb) continue
+            </div>
+
+            <h3>✅ Test di Funzionalità</h3>
+
+            <h4>Test di Connessione</h4>
+            <ol>
+                <li>Avviare il broker Mosquitto</li>
+                <li>Lanciare il client</li>
+                <li>Verificare messaggio "Connesso al broker MQTT"</li>
+                <li>Controllare sottoscrizione automatica</li>
+            </ol>
+
+            <h4>Test di Comunicazione</h4>
+            <ol>
+                <li>Avviare due istanze con ruoli compatibili</li>
+                <li>Inviare messaggio dalla prima istanza</li>
+                <li>Verificare ricezione nella seconda istanza</li>
+                <li>Controllare timestamp e formattazione</li>
+            </ol>
+
+            <h2 id="sicurezza">🔒 Considerazioni sulla Sicurezza</h2>
+
+            <h3>🛡️ Implementazioni di Sicurezza Attuali</h3>
+            <ul>
+                <li><strong>Controllo Accesso Logico:</strong> Basato su topic hierarchy</li>
+                <li><strong>Isolamento Ruoli:</strong> Ogni ruolo ha permessi specifici</li>
+                <li><strong>Validazione Input:</strong> Controllo lunghezza messaggi e topic</li>
+                <li><strong>Gestione Errori:</strong> Handling sicuro delle connessioni</li>
+            </ul>
+
+            <h3>⚠️ Vulnerabilità Identificate</h3>
+            
+            <div class="warning-box">
+                <h4>Messaggi in Chiaro</h4>
+                <p>I messaggi viaggiano non crittografati. Un attaccante con accesso alla rete può intercettare e leggere tutti i contenuti.</p>
+                
+                <h4>Mancanza di Autenticazione</h4>
+                <p>Non c'è verifica dell'identità degli utenti. Chiunque può assumere qualsiasi ruolo.</p>
+                
+                <h4>Topic Spoofing</h4>
+                <p>Un client può potenzialmente pubblicare su topic non autorizzati modificando il codice.</p>
+            </div>
+
+            <h3>🔧 Miglioramenti Suggeriti</h3>
+            <ol>
+                <li><strong>TLS/SSL:</strong> Crittografia del trasporto</li>
+                <li><strong>Autenticazione:</strong> Username/password o certificati</li>
+                <li><strong>ACL Broker:</strong> Controllo accesso server-side</li>
+                <li><strong>Message Encryption:</strong> Crittografia end-to-end</li>
+                <li><strong>Rate Limiting:</strong> Prevenzione spam/DoS</li>
+                <li><strong>Audit Logging:</strong> Log delle attività utente</li>
+            </ol>
+
+            <h2 id="troubleshooting">🔧 Risoluzione Problemi</h2>
+
+            <h3>❌ Problemi Comuni</h3>
+
+            <h4>Errore: "Broker non raggiungibile"</h4>
+            <div class="code-block">
+# Verifica se Mosquitto è attivo
+brew services list | grep mosquitto
+
+# Se non attivo, avvialo
+brew services start mosquitto
+
+# Testa connessione manuale
+mosquitto_sub -h localhost -t test/topic
+            </div>
+
+            <h4>Errore di Compilazione: "mosquitto.h not found"</h4>
+            <div class="code-block">
+# Installa librerie di sviluppo
+brew install mosquitto-dev
+
+# Verifica path include
+pkg-config --cflags libmosquitto
+            </div>
+
+            <h4>Messaggi Non Ricevuti</h4>
+            <ol>
+                <li>Verifica topic di sottoscrizione con <code>/topic</code></li>
+                <li>Controlla che i ruoli abbiano permessi compatibili</li>
+                <li>Testa con client da linea di comando:
+                    <div class="code-block">mosquitto_sub -h localhost -t "universita/#"</div>
+                </li>
+            </ol>
+
+            <h3>📊 Diagnostica Avanzata</h3>
+
+            <h4>Log del Broker</h4>
+            <div class="code-block">
+# Avvia broker in modalità verbose
+mosquitto -v
+
+# Log su file  
+mosquitto -v > mosquitto.log 2>&1
+            </div>
+
+            <h4>Monitor Traffico di Rete</h4>
+            <div class="code-block">
+# Con netstat
+netstat -an | grep 1883
+
+# Con lsof
+lsof -i :1883
+            </div>
+
+            <div class="info-box">
+                <h4>💡 Suggerimento per il Debug</h4>
+                <p>Usa sempre Wireshark per analizzare il traffico MQTT. È il modo più efficace per capire cosa succede a livello di protocollo e identificare problemi di comunicazione.</p>
+            </div>
+
+            <h3>🆘 Supporto e Risorse</h3>
+            <ul>
+                <li><strong>Documentazione Mosquitto:</strong> <a href="https://mosquitto.org/documentation/">https://mosquitto.org/documentation/</a></li>
+                <li><strong>MQTT Specification:</strong> <a href="https://mqtt.org/mqtt-specification/">https://mqtt.org/mqtt-specification/</a></li>
+                <li><strong>Eclipse Paho:</strong> <a href="https://www.eclipse.org/paho/">https://www.eclipse.org/paho/</a></li>
+            </ul>
+
+            <h2>📈 Possibili Estensioni</h2>
+
+            <h3>🚀 Funzionalità Avanzate</h3>
+            <ul>
+                <li><strong>Interfaccia Grafica:</strong> GUI con GTK+ o Qt</li>
+                <li><strong>Persistenza Messaggi:</strong> Database SQLite per storico chat</li>
+                <li><strong>Notifiche Push:</strong> Integrazione con sistemi di notifica OS</li>
+                <li><strong>File Transfer:</strong> Invio di allegati tramite MQTT</li>
+                <li><strong>Presenza Utenti:</strong> Indicator online/offline</li>
+                <li><strong>Gruppi Privati:</strong> Chat room tematiche</li>
+            </ul>
+
+            <h3>🏢 Integrazione Enterprise</h3>
+            <ul>
+                <li><strong>LDAP Integration:</strong> Autenticazione aziendale</li>
+                <li><strong>SSO Support:</strong> Single Sign-On</li>
+                <li><strong>Compliance:</strong> GDPR, logging audit</li>
+                <li><strong>Scalabilità:</strong>

@@ -1,0 +1,60 @@
+# Makefile per Chat MQTT Universitaria
+CC = gcc
+CFLAGS = -Wall -Wextra -std=c99 -pedantic
+LIBS = -lmosquitto
+TARGET = mqtt_chat
+SOURCE = mqtt_chat.c
+
+# Target principale
+$(TARGET): $(SOURCE)
+	$(CC) $(CFLAGS) -o $(TARGET) $(SOURCE) $(LIBS)
+
+# Target per compilazione con debug
+debug: CFLAGS += -g -DDEBUG
+debug: $(TARGET)
+
+# Target per pulizia
+clean:
+	rm -f $(TARGET)
+
+# Target per installazione dipendenze (macOS con Homebrew)
+install-deps:
+	@echo "Installazione dipendenze per macOS..."
+	brew install mosquitto
+	brew install mosquitto-dev
+
+# Target per avviare il broker mosquitto
+start-broker:
+	@echo "Avvio broker Mosquitto..."
+	brew services start mosquitto
+
+# Target per fermare il broker
+stop-broker:
+	@echo "Arresto broker Mosquitto..."
+	brew services stop mosquitto
+
+# Target per controllare stato broker
+status-broker:
+	@echo "Stato broker Mosquitto:"
+	brew services list | grep mosquitto
+
+# Target per test rapido
+test: $(TARGET)
+	@echo "Compilazione completata. Per testare:"
+	@echo "1. make start-broker"
+	@echo "2. ./$(TARGET)"
+
+# Target per aiuto
+help:
+	@echo "Targets disponibili:"
+	@echo "  all          - Compila il programma"
+	@echo "  debug        - Compila con flag di debug"
+	@echo "  clean        - Rimuove i file compilati"
+	@echo "  install-deps - Installa dipendenze (macOS)"
+	@echo "  start-broker - Avvia broker Mosquitto"
+	@echo "  stop-broker  - Ferma broker Mosquitto"
+	@echo "  status-broker- Controlla stato broker"
+	@echo "  test         - Compila e mostra istruzioni test"
+	@echo "  help         - Mostra questo aiuto"
+
+.PHONY: clean install-deps start-broker stop-broker status-broker test help debug

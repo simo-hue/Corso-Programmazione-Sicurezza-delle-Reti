@@ -1,0 +1,979 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{tcolorbox}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Impostazioni pagina
+\geometry{
+    top=2.5cm,
+    bottom=2.5cm,
+    left=2.5cm,
+    right=2.5cm
+}
+
+% Stile intestazioni
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Chat MQTT Universitaria}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% Configurazione colori
+\definecolor{codeblue}{RGB}{42,63,80}
+\definecolor{codegray}{RGB}{128,128,128}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{codepurple}{RGB}{128,0,128}
+\definecolor{backcolour}{RGB}{245,245,245}
+\definecolor{infocolor}{RGB}{116,185,255}
+\definecolor{warningcolor}{RGB}{253,203,110}
+
+% Stile per il codice
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single,
+    rulecolor=\color{black!30}
+}
+
+\lstset{style=mystyle}
+
+% Box per informazioni e warning
+\newtcolorbox{infobox}{
+    colback=infocolor!10,
+    colframe=infocolor!80!black,
+    leftrule=4mm,
+    rightrule=0mm,
+    toprule=0mm,
+    bottomrule=0mm,
+    title=\textbf{Informazione},
+    fonttitle=\bfseries
+}
+
+\newtcolorbox{warningbox}{
+    colback=warningcolor!10,
+    colframe=warningcolor!80!black,
+    leftrule=4mm,
+    rightrule=0mm,
+    toprule=0mm,
+    bottomrule=0mm,
+    title=\textbf{Attenzione},
+    fonttitle=\bfseries
+}
+
+% Titolo personalizzato
+\titleformat{\section}{\Large\bfseries\color{codeblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{codeblue}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{codeblue}}{\thesubsubsection}{1em}{}
+
+\begin{document}
+
+% Pagina del titolo
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\Huge\bfseries Chat MQTT Universitaria}
+        
+    \vspace{2cm}
+    {\large Implementazione Paradigma PUB/SUB con Mosquitto in C}
+    
+    \vspace{3cm}
+    \vspace{1cm}
+    {\Large Mattioli Simone}
+    \vspace{3cm}
+    
+    \begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black]
+        \centering
+        \textbf{Caratteristiche Principali:}
+        \begin{itemize}[leftmargin=2cm]
+            \item Sistema di messaging MQTT per ambiente universitario
+            \item Gerarchia di ruoli con permessi differenziati
+            \item Implementazione in C con libreria Mosquitto
+            \item Analisi traffico con Wireshark
+            \item Build automation con Makefile
+        \end{itemize}
+    \end{tcolorbox}
+    
+    \vfill
+    {\large \today}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Introduzione}
+
+\begin{infobox}
+\textbf{Cos'è MQTT?}
+
+MQTT (Message Queuing Telemetry Transport) è un protocollo di messaggistica leggero progettato per dispositivi con risorse limitate e reti con larghezza di banda ridotta. Utilizza il paradigma publish/subscribe per la comunicazione asincrona.
+\end{infobox}
+
+Questo progetto implementa un sistema di chat universitaria basato su MQTT che simula la comunicazione tra diversi ruoli accademici: Rettore, Segreteria, Docenti e Studenti. Il sistema utilizza una gerarchia di topic strutturata per gestire i permessi di accesso e la distribuzione dei messaggi.
+
+\subsection{Obiettivi del Progetto}
+
+\begin{itemize}
+    \item Implementare il paradigma PUB/SUB usando Mosquitto
+    \item Creare una gerarchia di permessi basata sui ruoli
+    \item Dimostrare la gestione delle connessioni e dei messaggi MQTT
+    \item Fornire un'interfaccia utente interattiva
+    \item Permettere l'analisi del traffico con Wireshark
+\end{itemize}
+
+\section{Architettura del Sistema}
+
+\subsection{Gerarchia dei Topic}
+
+Il sistema utilizza una struttura gerarchica di topic MQTT per gestire i permessi e il routing dei messaggi:
+
+\begin{lstlisting}[language=bash, caption=Struttura Topic MQTT]
+universita/
+├── personale/
+│   ├── docenti/
+│   │   └── [username]
+│   ├── studenti/
+│   │   └── [username]
+│   └── segreteria/
+│       └── [username]
+└── amministrazione/
+    └── rettore/
+        └── [username]
+\end{lstlisting}
+
+\subsection{Ruoli e Permessi}
+
+\subsubsection{RETTORE}
+\begin{itemize}
+    \item \textbf{Sottoscrizione:} \texttt{universita/\#} (accesso completo)
+    \item \textbf{Pubblicazione:} \texttt{universita/amministrazione/rettore/[username]}
+    \item \textbf{Privilegi:} Può leggere tutti i messaggi dell'università
+\end{itemize}
+
+\subsubsection{SEGRETERIA}
+\begin{itemize}
+    \item \textbf{Sottoscrizione:} \texttt{universita/personale/\#}
+    \item \textbf{Pubblicazione:} \texttt{universita/personale/segreteria/[username]}
+    \item \textbf{Privilegi:} Accesso a tutto il personale (docenti e studenti)
+\end{itemize}
+
+\subsubsection{DOCENTE}
+\begin{itemize}
+    \item \textbf{Sottoscrizione:} \texttt{universita/personale/\#}
+    \item \textbf{Pubblicazione:} \texttt{universita/personale/docenti/[username]}
+    \item \textbf{Privilegi:} Può comunicare con altri docenti e studenti
+\end{itemize}
+
+\subsubsection{STUDENTE}
+\begin{itemize}
+    \item \textbf{Sottoscrizione:} \texttt{universita/personale/studenti/\#}
+    \item \textbf{Pubblicazione:} \texttt{universita/personale/studenti/[username]}
+    \item \textbf{Privilegi:} Può comunicare solo con altri studenti
+\end{itemize}
+
+\subsection{Flusso dei Messaggi}
+
+\begin{longtable}{|p{3cm}|p{5cm}|p{6cm}|}
+\hline
+\textbf{Mittente} & \textbf{Destinatari} & \textbf{Topic} \\
+\hline
+Studente & Altri Studenti, Docenti, Segreteria, Rettore & universita/personale/studenti/[username] \\
+\hline
+Docente & Altri Docenti, Segreteria, Rettore & universita/personale/docenti/[username] \\
+\hline
+Segreteria & Altre Segreterie, Rettore & universita/personale/segreteria/[username] \\
+\hline
+Rettore & Tutti & universita/amministrazione/rettore/[username] \\
+\hline
+\end{longtable}
+
+\section{Installazione e Configurazione}
+
+\subsection{Prerequisiti}
+
+\begin{itemize}
+    \item macOS con Homebrew installato
+    \item Compilatore GCC
+    \item Accesso terminale
+\end{itemize}
+
+\subsection{Installazione Dipendenze}
+
+\begin{lstlisting}[language=bash, caption=Installazione Mosquitto]
+# Installa Mosquitto broker e librerie di sviluppo
+brew install mosquitto
+brew install mosquitto-dev
+
+# Verifica installazione
+mosquitto --help
+mosquitto_pub --help
+mosquitto_sub --help
+\end{lstlisting}
+
+\subsection{Struttura del Progetto}
+
+\begin{lstlisting}[language=bash, caption=Struttura Directory]
+mqtt-chat/
+├── mqtt_chat.c          # Codice sorgente principale
+├── Makefile            # Build automation
+└── README.md           # Documentazione base
+\end{lstlisting}
+
+\subsection{Compilazione}
+
+\begin{lstlisting}[language=bash, caption=Comandi di Build]
+# Compilazione standard
+make
+
+# Compilazione con debug
+make debug
+
+# Pulizia file compilati
+make clean
+
+# Installazione dipendenze
+make install-deps
+\end{lstlisting}
+
+\section{Guida all'Utilizzo}
+
+\subsection{Avvio del Sistema}
+
+\subsubsection{1. Avviare il Broker Mosquitto}
+\begin{lstlisting}[language=bash]
+# Avvio del servizio
+make start-broker
+# oppure
+brew services start mosquitto
+
+# Verifica stato
+make status-broker
+# oppure  
+brew services list | grep mosquitto
+\end{lstlisting}
+
+\subsubsection{2. Avviare l'Applicazione}
+\begin{lstlisting}[language=bash]
+./mqtt_chat
+\end{lstlisting}
+
+\subsection{Interfaccia Utente}
+
+\subsubsection{Selezione Ruolo}
+All'avvio, il programma richiede di scegliere il ruolo:
+
+\begin{lstlisting}[language=bash]
+=== SCEGLI IL TUO RUOLO ===
+1. Rettore (legge tutto)
+2. Segreteria (legge personale)  
+3. Docente (legge personale)
+4. Studente (legge solo studenti)
+Scelta [1-4]: 
+\end{lstlisting}
+
+\subsubsection{Comandi Disponibili}
+
+\begin{longtable}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Comando} & \textbf{Descrizione} \\
+\hline
+\texttt{/help} & Mostra l'elenco dei comandi disponibili \\
+\hline
+\texttt{/quit} & Esce dall'applicazione \\
+\hline
+\texttt{/status} & Mostra lo stato della connessione e il ruolo attivo \\
+\hline
+\texttt{/topic} & Visualizza i topic di sottoscrizione e pubblicazione \\
+\hline
+\texttt{[messaggio]} & Qualsiasi altro testo viene inviato come messaggio \\
+\hline
+\end{longtable}
+
+\subsection{Scenario di Test}
+
+Per replicare uno scenario completo, aprire 6 terminali:
+
+\begin{lstlisting}[language=bash, caption=Setup Multi-Utente]
+# Terminal 1 - Rettore
+./mqtt_chat
+→ Scegli ruolo: 1
+→ Username: rettore
+
+# Terminal 2 - Segreteria 1  
+./mqtt_chat
+→ Scegli ruolo: 2
+→ Username: segretaria1
+
+# Terminal 3 - Segreteria 2
+./mqtt_chat  
+→ Scegli ruolo: 2
+→ Username: segretaria2
+
+# Terminal 4 - Docente
+./mqtt_chat
+→ Scegli ruolo: 3  
+→ Username: prof_rossi
+
+# Terminal 5 - Studente 1
+./mqtt_chat
+→ Scegli ruolo: 4
+→ Username: mario_rossi
+
+# Terminal 6 - Studente 2  
+./mqtt_chat
+→ Scegli ruolo: 4
+→ Username: giulia_bianchi
+\end{lstlisting}
+
+\section{Analisi del Codice Sorgente}
+
+\subsection{Strutture Dati Principali}
+
+Il file \texttt{mqtt\_chat.c} definisce le seguenti strutture fondamentali:
+
+\subsubsection{Enumerazione Ruoli}
+\begin{lstlisting}[language=c, caption=Definizione Ruoli Utente]
+typedef enum {
+    ROLE_RETTORE,
+    ROLE_SEGRETERIA,
+    ROLE_DOCENTE,
+    ROLE_STUDENTE
+} user_role_t;
+\end{lstlisting}
+
+\subsubsection{Struttura Client Chat}
+\begin{lstlisting}[language=c, caption=Struttura Client MQTT]
+typedef struct {
+    struct mosquitto *mosq;              // Istanza client Mosquitto
+    user_role_t role;                    // Ruolo dell'utente
+    char username[MAX_USERNAME_LEN];     // Nome utente
+    char subscribe_topic[MAX_TOPIC_LEN]; // Topic sottoscrizione
+    char publish_base_topic[MAX_TOPIC_LEN]; // Topic pubblicazione base
+    int is_connected;                    // Stato connessione
+} mqtt_chat_client_t;
+\end{lstlisting}
+
+\subsection{Funzioni Callback}
+
+\subsubsection{Callback di Connessione}
+\begin{lstlisting}[language=c, caption=Gestione Connessione]
+void on_connect(struct mosquitto *mosq, void *userdata, int result) {
+    mqtt_chat_client_t *client = (mqtt_chat_client_t *)userdata;
+    
+    if (result == 0) {
+        printf("✅ Connesso al broker MQTT come %s\n", client->username);
+        client->is_connected = 1;
+        
+        // Subscribe al topic appropriato
+        mosquitto_subscribe(mosq, NULL, client->subscribe_topic, 0);
+        printf("📡 Sottoscritto al topic: %s\n", client->subscribe_topic);
+    } else {
+        printf("❌ Errore di connessione: %d\n", result);
+    }
+}
+\end{lstlisting}
+
+Questa funzione:
+\begin{itemize}
+    \item Gestisce il risultato della connessione al broker
+    \item Effettua automaticamente la sottoscrizione al topic appropriato
+    \item Aggiorna lo stato di connessione del client
+    \item Fornisce feedback visivo all'utente
+\end{itemize}
+
+\subsubsection{Callback di Messaggio}
+\begin{lstlisting}[language=c, caption=Ricezione Messaggi]
+void on_message(struct mosquitto *mosq, void *userdata, 
+                const struct mosquitto_message *message) {
+    mqtt_chat_client_t *client = (mqtt_chat_client_t *)userdata;
+    
+    if (message->payloadlen) {
+        // Ottieni timestamp
+        time_t now = time(NULL);
+        struct tm *tm_info = localtime(&now);
+        char timestamp[20];
+        strftime(timestamp, sizeof(timestamp), "%H:%M:%S", tm_info);
+        
+        // Stampa il messaggio ricevuto
+        printf("\n💬 [%s] Topic: %s\n", timestamp, message->topic);
+        printf("   Messaggio: %s\n", (char *)message->payload);
+        printf(">> ");
+        fflush(stdout);
+    }
+}
+\end{lstlisting}
+
+Funzionalità implementate:
+\begin{itemize}
+    \item Riceve e processa i messaggi in arrivo
+    \item Formatta l'output con timestamp e informazioni topic
+    \item Gestisce la visualizzazione asincrona dei messaggi
+    \item Mantiene il prompt utente sempre visibile
+\end{itemize}
+
+\subsection{Inizializzazione Client}
+
+\begin{lstlisting}[language=c, caption=Configurazione Ruolo]
+void init_client_by_role(mqtt_chat_client_t *client, user_role_t role, 
+                        const char *username) {
+    client->role = role;
+    strncpy(client->username, username, MAX_USERNAME_LEN - 1);
+    client->is_connected = 0;
+    
+    switch (role) {
+        case ROLE_RETTORE:
+            strcpy(client->subscribe_topic, "universita/#");
+            strcpy(client->publish_base_topic, "universita/amministrazione/rettore");
+            break;
+            
+        case ROLE_SEGRETERIA:
+            strcpy(client->subscribe_topic, "universita/personale/#");
+            strcpy(client->publish_base_topic, "universita/personale/segreteria");
+            break;
+            
+        case ROLE_DOCENTE:
+            strcpy(client->subscribe_topic, "universita/personale/#");
+            strcpy(client->publish_base_topic, "universita/personale/docenti");
+            break;
+            
+        case ROLE_STUDENTE:
+            strcpy(client->subscribe_topic, "universita/personale/studenti/#");
+            strcpy(client->publish_base_topic, "universita/personale/studenti");
+            break;
+    }
+}
+\end{lstlisting}
+
+Questa funzione implementa la logica di controllo accesso configurando i topic appropriati per ogni ruolo secondo la gerarchia definita.
+
+\subsection{Funzione di Pubblicazione}
+
+\begin{lstlisting}[language=c, caption=Invio Messaggi]
+void publish_message(mqtt_chat_client_t *client, const char *message) {
+    if (!client->is_connected) {
+        printf("❌ Non connesso al broker!\n");
+        return;
+    }
+    
+    char full_topic[MAX_TOPIC_LEN];
+    char full_message[MAX_MESSAGE_LEN];
+    
+    // Crea il topic completo con l'username
+    snprintf(full_topic, sizeof(full_topic), "%s/%s", 
+             client->publish_base_topic, client->username);
+    
+    // Crea il messaggio completo con nome utente
+    snprintf(full_message, sizeof(full_message), "%s: %s", 
+             client->username, message);
+    
+    int result = mosquitto_publish(client->mosq, NULL, full_topic, 
+                                  strlen(full_message), full_message, 0, false);
+    
+    if (result == MOSQ_ERR_SUCCESS) {
+        printf("📤 Messaggio inviato!\n");
+    } else {
+        printf("❌ Errore invio messaggio: %d\n", result);
+    }
+}
+\end{lstlisting}
+
+Caratteristiche implementative:
+\begin{itemize}
+    \item Verifica stato connessione prima dell'invio
+    \item Costruisce topic completo includendo username
+    \item Formatta il messaggio con identificazione mittente
+    \item Gestisce errori di pubblicazione con feedback utente
+    \item Utilizza QoS 0 per massime performance
+\end{itemize}
+
+\subsection{Loop Principale}
+
+Il \texttt{main()} implementa un ciclo di gestione input che:
+\begin{itemize}
+    \item Inizializza la libreria Mosquitto
+    \item Gestisce selezione ruolo e username
+    \item Configura callback e connessione
+    \item Avvia loop network in background
+    \item Processa comandi utente in loop sincrono
+    \item Gestisce cleanup e disconnessione pulita
+\end{itemize}
+
+\section{Analisi del Makefile}
+
+Il Makefile fornisce un sistema di build automation completo:
+
+\subsection{Variabili di Configurazione}
+
+\begin{lstlisting}[language=make, caption=Configurazione Build]
+CC = gcc
+CFLAGS = -Wall -Wextra -std=c99 -pedantic
+LIBS = -lmosquitto
+TARGET = mqtt_chat
+SOURCE = mqtt_chat.c
+\end{lstlisting}
+
+\subsection{Target Principali}
+
+\subsubsection{Compilazione}
+\begin{lstlisting}[language=make]
+$(TARGET): $(SOURCE)
+	$(CC) $(CFLAGS) -o $(TARGET) $(SOURCE) $(LIBS)
+
+debug: CFLAGS += -g -DDEBUG
+debug: $(TARGET)
+\end{lstlisting}
+
+\subsubsection{Gestione Dipendenze}
+\begin{lstlisting}[language=make]
+install-deps:
+	@echo "Installazione dipendenze per macOS..."
+	brew install mosquitto
+	brew install mosquitto-dev
+\end{lstlisting}
+
+\subsubsection{Gestione Broker}
+\begin{lstlisting}[language=make]
+start-broker:
+	@echo "Avvio broker Mosquitto..."
+	brew services start mosquitto
+
+stop-broker:
+	@echo "Arresto broker Mosquitto..."
+	brew services stop mosquitto
+
+status-broker:
+	@echo "Stato broker Mosquitto:"
+	brew services list | grep mosquitto
+\end{lstlisting}
+
+Il Makefile automatizza completamente il workflow di sviluppo, dalla gestione delle dipendenze al controllo del broker MQTT.
+
+\section{Testing e Debug}
+
+\subsection{Analisi con Wireshark}
+
+\subsubsection{Filtri Utili}
+
+\begin{longtable}{|p{6cm}|p{8cm}|}
+\hline
+\textbf{Filtro} & \textbf{Descrizione} \\
+\hline
+\texttt{mqtt} & Mostra tutto il traffico MQTT \\
+\hline
+\texttt{mqtt.topic contains "chat"} & Filtra per topic contenenti "chat" \\
+\hline
+\texttt{mqtt and ip.addr == localhost} & Traffico MQTT verso/da localhost \\
+\hline
+\texttt{mqtt.msgtype == 3} & Solo messaggi PUBLISH \\
+\hline
+\end{longtable}
+
+\subsubsection{Osservazioni sul Traffico}
+\begin{itemize}
+    \item \textbf{Keep Alive:} Pacchetti PING regolari per mantenere connessione NAT
+    \item \textbf{Publisher Pattern:} Connessione → Pubblicazione → Disconnessione
+    \item \textbf{Subscriber Pattern:} Connessione persistente con keep-alive
+    \item \textbf{QoS Levels:} Il sistema usa QoS 0 (at most once delivery)
+\end{itemize}
+
+\subsection{Debug e Logging}
+
+\subsubsection{Compilazione Debug}
+\begin{lstlisting}[language=bash]
+make debug
+\end{lstlisting}
+
+\subsubsection{Debugging con GDB}
+\begin{lstlisting}[language=bash]
+gdb ./mqtt_chat
+(gdb) run
+(gdb) break on_message
+(gdb) continue
+\end{lstlisting}
+
+\subsection{Test di Funzionalità}
+
+\subsubsection{Test di Connessione}
+\begin{enumerate}
+    \item Avviare il broker Mosquitto
+    \item Lanciare il client
+    \item Verificare messaggio "Connesso al broker MQTT"
+    \item Controllare sottoscrizione automatica
+\end{enumerate}
+
+\subsubsection{Test di Comunicazione}
+\begin{enumerate}
+    \item Avviare due istanze con ruoli compatibili
+    \item Inviare messaggio dalla prima istanza
+    \item Verificare ricezione nella seconda istanza
+    \item Controllare timestamp e formattazione
+\end{enumerate}
+
+\section{Considerazioni sulla Sicurezza}
+
+\subsection{Implementazioni di Sicurezza Attuali}
+\begin{itemize}
+    \item \textbf{Controllo Accesso Logico:} Basato su topic hierarchy
+    \item \textbf{Isolamento Ruoli:} Ogni ruolo ha permessi specifici
+    \item \textbf{Validazione Input:} Controllo lunghezza messaggi e topic
+    \item \textbf{Gestione Errori:} Handling sicuro delle connessioni
+\end{itemize}
+
+\subsection{Vulnerabilità Identificate}
+
+\begin{warningbox}
+\textbf{Messaggi in Chiaro}
+
+I messaggi viaggiano non crittografati. Un attaccante con accesso alla rete può intercettare e leggere tutti i contenuti.
+
+\textbf{Mancanza di Autenticazione}
+
+Non c'è verifica dell'identità degli utenti. Chiunque può assumere qualsiasi ruolo.
+
+\textbf{Topic Spoofing}
+
+Un client può potenzialmente pubblicare su topic non autorizzati modificando il codice.
+\end{warningbox}
+
+\subsection{Miglioramenti Suggeriti}
+\begin{enumerate}
+    \item \textbf{TLS/SSL:} Crittografia del trasporto
+    \item \textbf{Autenticazione:} Username/password o certificati
+    \item \textbf{ACL Broker:} Controllo accesso server-side
+    \item \textbf{Message Encryption:} Crittografia end-to-end
+    \item \textbf{Rate Limiting:} Prevenzione spam/DoS
+    \item \textbf{Audit Logging:} Log delle attività utente
+\end{enumerate}
+
+\section{Risoluzione Problemi}
+
+\subsection{Problemi Comuni}
+
+\subsubsection{Errore: "Broker non raggiungibile"}
+\begin{lstlisting}[language=bash]
+# Verifica se Mosquitto è attivo
+brew services list | grep mosquitto
+
+# Se non attivo, avvialo
+brew services start mosquitto
+
+# Testa connessione manuale
+mosquitto_sub -h localhost -t test/topic
+\end{lstlisting}
+
+\subsubsection{Errore di Compilazione: "mosquitto.h not found"}
+\begin{lstlisting}[language=bash]
+# Installa librerie di sviluppo
+brew install mosquitto-dev
+
+# Verifica path include
+pkg-config --cflags libmosquitto
+\end{lstlisting}
+
+\subsubsection{Messaggi Non Ricevuti}
+\begin{enumerate}
+    \item Verifica topic di sottoscrizione con \texttt{/topic}
+    \item Controlla che i ruoli abbiano permessi compatibili
+    \item Testa con client da linea di comando:
+    \begin{lstlisting}[language=bash]
+mosquitto_sub -h localhost -t "universita/#"
+    \end{lstlisting}
+\end{enumerate}
+
+\subsection{Diagnostica Avanzata}
+
+\subsubsection{Log del Broker}
+\begin{lstlisting}[language=bash]
+# Avvia broker in modalità verbose
+mosquitto -v
+
+# Log su file  
+mosquitto -v > mosquitto.log 2>&1
+\end{lstlisting}
+
+\subsubsection{Monitor Traffico di Rete}
+\begin{lstlisting}[language=bash]
+# Con netstat
+netstat -an | grep 1883
+
+# Con lsof
+lsof -i :1883
+\end{lstlisting}
+
+\begin{infobox}
+\textbf{Suggerimento per il Debug}
+
+Usa sempre Wireshark per analizzare il traffico MQTT. È il modo più efficace per capire cosa succede a livello di protocollo e identificare problemi di comunicazione.
+\end{infobox}
+
+\section{Possibili Estensioni}
+
+\subsection{Funzionalità Avanzate}
+\begin{itemize}
+    \item \textbf{Interfaccia Grafica:} GUI con GTK+ o Qt
+    \item \textbf{Persistenza Messaggi:} Database SQLite per storico chat
+    \item \textbf{Notifiche Push:} Integrazione con sistemi di notifica OS
+    \item \textbf{File Transfer:} Invio di allegati tramite MQTT
+    \item \textbf{Presenza Utenti:} Indicator online/offline
+    \item \textbf{Gruppi Privati:} Chat room tematiche
+\end{itemize}
+
+\subsection{Integrazione Enterprise}
+\begin{itemize}
+    \item \textbf{LDAP Integration:} Autenticazione aziendale
+    \item \textbf{SSO Support:} Single Sign-On
+    \item \textbf{Compliance:} GDPR, logging audit
+    \item \textbf{Scalabilità:} Clustering broker, load balancing
+\end{itemize}
+
+\section{Conclusioni}
+
+Il progetto Chat MQTT Universitaria rappresenta un'implementazione completa e funzionale del paradigma publish/subscribe utilizzando il protocollo MQTT. L'architettura basata sulla gerarchia di topic permette un controllo granulare dei permessi di accesso, simulando realisticamente l'ambiente comunicativo di un'istituzione universitaria.
+
+\subsection{Obiettivi Raggiunti}
+\begin{itemize}
+    \item Implementazione completa del pattern PUB/SUB
+    \item Sistema di ruoli e permessi funzionante
+    \item Interfaccia utente intuitiva e interattiva
+    \item Gestione robusta delle connessioni e disconnessioni
+    \item Analisi del traffico di rete tramite Wireshark integrata
+    \item Build system automatizzato con Makefile completo
+\end{itemize}
+
+\subsection{Lezioni Apprese}
+\begin{itemize}
+    \item \textbf{Paradigma PUB/SUB:} Efficacia nella disaccoppiamento dei componenti
+    \item \textbf{Topic Hierarchy:} Importanza cruciale nella progettazione dei permessi
+    \item \textbf{Gestione Asincrona:} Complessità nella sincronizzazione I/O e UI
+    \item \textbf{Error Handling:} Necessità di gestione robusta degli stati di errore
+    \item \textbf{Debugging Distribuito:} Utilità fondamentale degli strumenti di analisi di rete
+\end{itemize}
+
+\subsection{Limitazioni Identificate}
+\begin{itemize}
+    \item Mancanza di persistenza dei messaggi offline
+    \item Assenza di crittografia end-to-end
+    \item Controllo accesso basato solo su logica client-side
+    \item Scalabilità limitata per grandi numeri di utenti
+    \item Gestione basilare degli errori di rete
+\end{itemize}
+
+\subsection{Applicabilità Reale}
+Il sistema implementato fornisce una base solida per applicazioni IoT e sistemi di messaging distribuiti. Le competenze acquisite sono direttamente trasferibili a:
+
+\begin{itemize}
+    \item Sistemi di monitoraggio industriale
+    \item Applicazioni IoT smart home
+    \item Piattaforme di telemetria veicolare
+    \item Sistemi di notifica enterprise
+    \item Architetture microservizi event-driven
+\end{itemize}
+
+\section{Appendici}
+
+\subsection{Appendice A: Codice Completo}
+
+Il codice sorgente completo è disponibile nei file del progetto. Le sezioni principali implementano:
+
+\begin{itemize}
+    \item Inizializzazione e configurazione client MQTT
+    \item Gestione callback per eventi di rete
+    \item Loop principale con input utente non-bloccante
+    \item Sistema di comandi interattivi
+    \item Gestione sicura della memoria e cleanup
+\end{itemize}
+
+\subsection{Appendice B: Configurazioni Avanzate}
+
+\subsubsection{Configurazione Broker Mosquitto}
+Per ambienti di produzione, modificare il file \texttt{/opt/homebrew/etc/mosquitto/mosquitto.conf}:
+
+\begin{lstlisting}[language=bash, caption=mosquitto.conf Avanzato]
+# Porta di ascolto
+port 1883
+
+# Autenticazione
+allow_anonymous false
+password_file /opt/homebrew/etc/mosquitto/passwd
+
+# ACL (Access Control List)
+acl_file /opt/homebrew/etc/mosquitto/acl
+
+# Persistenza
+persistence true
+persistence_location /opt/homebrew/var/lib/mosquitto/
+
+# Log
+log_dest file /opt/homebrew/var/log/mosquitto/mosquitto.log
+log_type all
+
+# Security
+max_connections 1000
+max_inflight_messages 20
+max_queued_messages 1000
+\end{lstlisting}
+
+\subsubsection{Setup ACL di Produzione}
+\begin{lstlisting}[language=bash, caption=File ACL Esempio]
+# ACL per ruoli universitari
+user rettore
+topic readwrite universita/#
+
+user segreteria_#
+topic readwrite universita/personale/#
+
+user docente_#
+topic readwrite universita/personale/docenti/#
+topic read universita/personale/studenti/#
+
+user studente_#
+topic readwrite universita/personale/studenti/#
+\end{lstlisting}
+
+\subsection{Appendice C: Script di Deployment}
+
+\begin{lstlisting}[language=bash, caption=Deploy Script]
+#!/bin/bash
+# deploy.sh - Script di deployment automatico
+
+set -e
+
+echo "=== Deploy Chat MQTT Universitaria ==="
+
+# Verifica prerequisiti
+check_dependencies() {
+    echo "Verifica dipendenze..."
+    command -v gcc >/dev/null 2>&1 || { echo "GCC richiesto"; exit 1; }
+    command -v mosquitto >/dev/null 2>&1 || { echo "Mosquitto richiesto"; exit 1; }
+    echo "✅ Dipendenze verificate"
+}
+
+# Compilazione
+build_project() {
+    echo "Compilazione progetto..."
+    make clean
+    make
+    echo "✅ Compilazione completata"
+}
+
+# Setup servizi
+setup_services() {
+    echo "Configurazione servizi..."
+    brew services start mosquitto
+    echo "✅ Broker MQTT avviato"
+}
+
+# Test sistema
+run_tests() {
+    echo "Esecuzione test..."
+    # Test connessione broker
+    timeout 5 mosquitto_pub -h localhost -t test -m "test" || {
+        echo "❌ Test broker fallito"
+        exit 1
+    }
+    echo "✅ Test completati"
+}
+
+# Main
+main() {
+    check_dependencies
+    build_project
+    setup_services
+    run_tests
+    echo "🚀 Deploy completato con successo!"
+}
+
+main "$@"
+\end{lstlisting}
+
+\subsection{Appendice D: Metriche e Monitoring}
+
+\subsubsection{Script di Monitoraggio}
+\begin{lstlisting}[language=bash, caption=Monitoring Script]
+#!/bin/bash
+# monitor.sh - Monitoraggio sistema MQTT
+
+while true; do
+    echo "=== MQTT System Status $(date) ==="
+    
+    # Status broker
+    echo "Broker Status:"
+    brew services list | grep mosquitto
+    
+    # Connessioni attive
+    echo "Active Connections:"
+    netstat -an | grep 1883 | wc -l
+    
+    # Utilizzo risorse
+    echo "Resource Usage:"
+    ps aux | grep mosquitto | grep -v grep
+    
+    sleep 30
+done
+\end{lstlisting}
+
+\section{Bibliografia e Riferimenti}
+
+\subsection{Documentazione Tecnica}
+\begin{itemize}
+    \item Eclipse Mosquitto Documentation: \texttt{https://mosquitto.org/documentation/}
+    \item MQTT Protocol Specification v5.0: \texttt{https://docs.oasis-open.org/mqtt/mqtt/v5.0/}
+    \item Eclipse Paho C Client Library: \texttt{https://github.com/eclipse/paho.mqtt.c}
+    \item Wireshark MQTT Dissector Guide: \texttt{https://wiki.wireshark.org/MQTT}
+\end{itemize}
+
+\subsection{Risorse Aggiuntive}
+\begin{itemize}
+    \item HiveMQ MQTT Essentials: \texttt{https://www.hivemq.com/mqtt-essentials/}
+    \item MQTT Security Best Practices: \texttt{https://www.hivemq.com/blog/mqtt-security-fundamentals/}
+    \item IoT Communication Protocols Comparison
+    \item Real-time Messaging Patterns in Distributed Systems
+\end{itemize}
+
+\subsection{Standard e RFC}
+\begin{itemize}
+    \item RFC 6455 - The WebSocket Protocol
+    \item RFC 7693 - The BLAKE2 Cryptographic Hash and Message Authentication Code
+    \item ISO/IEC 20922:2016 - Information technology -- Message Queuing Telemetry Transport (MQTT)
+\end{itemize}
+
+\begin{infobox}
+\textbf{Nota Finale}
+
+Questa documentazione rappresenta una guida completa per l'implementazione, il deployment e la manutenzione del sistema Chat MQTT Universitaria. Per aggiornamenti e contributi al progetto, consultare il repository Git associato.
+\end{infobox}
+
+\vfill
+\centering
+\textit{Fine Documentazione} \\
+\textbf{Chat MQTT Universitaria v1.0}
+
+\end{document}
