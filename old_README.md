@@ -74,6 +74,7 @@ gcc network.c clientTCP.c -o clientTCP -lpthread
 | **APPUNTI GOODNOTES/** | Appunti manoscritti in PDF esportati da GoodNotes. -> COMMING SOON! ( 2,3 days). |
 | **LUCIDI/** | Slide del corso in PDF. |
 | **.vscode/** | Task e configurazioni per Visual Studio Code. |
+| **documentazione.pdf** | Descrizione in LATEX della repository e del corso ( in breve ). |
 
 ## Guida rapida
 
