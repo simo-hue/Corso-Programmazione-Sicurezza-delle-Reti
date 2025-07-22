@@ -1,3 +1,20 @@
+/*
+
+    COMPILARE -> gcc -I/opt/homebrew/Cellar/mosquitto/2.0.22_1/include -L/opt/homebrew/lib -o chat chat.c -lmosquitto
+
+    COMMENTI DA WIRESHARK:
+         - Noto pacchetti di PING ( keep Alive ) per mantenere nel NAT l'associazione per il SUBSCRIBER
+         - PUBLISHER instaura la connessione, pubblica e poi si disconnette
+         - SICUREZZA nei viaggi -> NON END-TO-END ( dovrei ad esempio cifrare il messaggio per renderlo INCOMPRENSIBILE )
+
+    FILTRI PER WIRESHARK:
+                    - mqtt -> filtro per protocollo
+                    - mqtt.topic contains "universita" -> filtro per topic
+                    - mqtt and ip.addr == 90.147.167.187 -> filtro per indirizzo IP del BROKER DEL PROF
+    
+
+*/ 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,7 +52,7 @@ void on_connect(struct mosquitto *mosq, void *userdata, int result) {
     mqtt_chat_client_t *client = (mqtt_chat_client_t *)userdata;
     
     if (result == 0) {
-        printf("✅ Connesso al broker MQTT come %s\n", client->username);
+        printf("\n\n\n✅ Connesso al broker MQTT come %s\n", client->username);
         client->is_connected = 1;
         
         // Subscribe al topic appropriato
@@ -131,7 +148,7 @@ void publish_message(mqtt_chat_client_t *client, const char *message) {
 
 // Funzione per mostrare i comandi disponibili
 void show_help() {
-    printf("\n=== COMANDI DISPONIBILI ===\n");
+    printf("\n\n\n=== COMANDI DISPONIBILI ===\n");
     printf("/help    - Mostra questo aiuto\n");
     printf("/quit    - Esce dalla chat\n");
     printf("/status  - Mostra stato connessione\n");
