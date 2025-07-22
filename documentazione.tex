@@ -1,0 +1,371 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+
+% Configurazione pagina
+\geometry{margin=2.5cm}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Documentazione Repository PSR}
+\fancyhead[R]{Simone Mattioli}
+\fancyfoot[C]{\thepage}
+
+% Configurazione colori e stili
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Documentazione Repository Programmazione e Sicurezza delle Reti},
+    pdfauthor={Simone Mattioli},
+    bookmarksopen=true,
+}
+
+\title{
+    \vspace{-2cm}
+    \begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Documentazione Della Repository GitHub]
+        \Huge \textbf{Corso di Programmazione e\\Sicurezza delle Reti}\\\\
+        \vspace{0.5cm}
+        \normalsize Repository di Simone Mattioli
+    \end{tcolorbox}
+}
+
+\author{
+    Università degli Studi di Verona\\
+    \vspace{1cm}
+    \textbf{Docente:} Prof. Davide Quaglia\\
+    \textbf{Studente:} Dott. Mattioli Simone\\
+    \vspace{1cm}
+    \href{https://github.com/simo-hue/Corso-Programmazione-Sicurezza-delle-Reti}{\texttt{GitHub Repository}}
+}
+
+\date{Anno Accademico 2024/2025}
+
+\begin{document}
+
+\maketitle
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Introduzione}
+
+Questo documento fornisce una documentazione completa del repository GitHub \textbf{"Corso-Programmazione-Sicurezza-delle-Reti"} sviluppato da Simone Mattioli per il corso di Programmazione e Sicurezza delle Reti presso l'Università degli Studi di Verona, tenuto dal Prof. Davide Quaglia.
+
+Il repository rappresenta una collezione organizzata di materiali didattici, codice sorgente, appunti e risorse pratiche sviluppate durante il corso nell'anno accademico 2024/2025.
+
+\subsection{URL del Repository}
+\url{https://github.com/simo-hue/Corso-Programmazione-Sicurezza-delle-Reti}
+
+\section{Obiettivi del Repository}
+
+Il progetto è stato creato con i seguenti obiettivi principali:
+
+\begin{itemize}
+    \item \textbf{Esempi Pratici:} Fornire implementazioni concrete di programmazione di rete utilizzando diversi linguaggi (C, Java, HTML/JavaScript)
+    \item \textbf{Documentazione di Laboratorio:} Documentare procedure pratiche per l'utilizzo di strumenti come Wireshark, MQTT, WebSocket e REST
+    \item \textbf{Materiale di Studio:} Conservare materiali didattici, appunti personali e risorse per la preparazione all'esame
+    \item \textbf{Riferimento Completo:} Creare un punto di riferimento organizzato per tutti gli argomenti del corso
+\end{itemize}
+
+\section{Requisiti di Sistema}
+
+Per utilizzare completamente i materiali presenti nel repository, sono necessari i seguenti software:
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|l|p{6cm}|}
+\hline
+\textbf{Software} & \textbf{Versione Minima} & \textbf{Note} \\
+\hline
+GCC / Clang & 9.0 & Su Windows è consigliato utilizzare Cygwin o WSL \\
+\hline
+Make & -- & Alcuni esempi includono Makefile per la compilazione automatica \\
+\hline
+Wireshark & 4.x & Strumento fondamentale per l'analisi del traffico di rete \\
+\hline
+Mosquitto & 2.x & Necessario solamente per le esercitazioni MQTT \\
+\hline
+Python 3 & 3.10 & Per gli script di supporto opzionali \\
+\hline
+\end{tabular}
+\caption{Requisiti software minimi}
+\end{table}
+
+\begin{tcolorbox}[colback=yellow!10!white,colframe=orange!75!black,title=Nota Importante]
+Per istruzioni dettagliate sull'installazione dell'ambiente C su Linux, macOS e Windows, consultare il file \texttt{Impostazione-PC-applicazioni-socket.pdf} presente nel repository.
+\end{tcolorbox}
+
+\section{Struttura del Repository}
+
+Il repository è organizzato in cartelle tematiche per facilitare la navigazione e l'utilizzo dei materiali:
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|p{8cm}|}
+\hline
+\textbf{Cartella} & \textbf{Descrizione} \\
+\hline
+\texttt{DOMANDE ESAME/} & Raccolta di domande degli esami orali delle sessioni precedenti \\
+\hline
+\texttt{FILE FORNITI DAL PROF/} & File originali forniti dal docente tramite la piattaforma Moodle del corso (senza soluzioni) \\
+\hline
+\texttt{MIEI ESERCIZI/} & Soluzioni personali sviluppate dall'autore per gli esercizi di laboratorio \\
+\hline
+\texttt{PER ESAME/} & Soluzioni commentate e materiale ottimizzato per la preparazione all'esame \\
+\hline
+\texttt{APPUNTI GOODNOTES/} & Appunti manoscritti in formato PDF esportati da GoodNotes (in arrivo) \\
+\hline
+\texttt{LUCIDI/} & Slide ufficiali del corso in formato PDF \\
+\hline
+\texttt{.vscode/} & Configurazioni e task per Visual Studio Code \\
+\hline
+\end{tabular}
+\caption{Struttura delle cartelle del repository}
+\end{table}
+
+\section{Guida Rapida all'Utilizzo}
+
+\subsection{Compilazione degli Esempi}
+
+Per compilare ed eseguire i principali esempi di programmazione di rete:
+
+\subsubsection{Esempi UDP}
+\begin{lstlisting}[language=bash, caption=Compilazione server/client UDP]
+# Compilazione del server UDP
+gcc network.c serverUDP.c -o serverUDP -lpthread
+
+# Compilazione del client UDP
+gcc network.c clientUDP.c -o clientUDP -lpthread
+\end{lstlisting}
+
+\subsubsection{Esempi TCP}
+\begin{lstlisting}[language=bash, caption=Compilazione server/client TCP]
+# Compilazione del server TCP
+gcc network.c serverTCP.c -o serverTCP -lpthread
+
+# Compilazione del client TCP
+gcc network.c clientTCP.c -o clientTCP -lpthread
+\end{lstlisting}
+
+\subsection{Esecuzione e Test}
+
+\subsubsection{Test Socket UDP/TCP}
+\begin{enumerate}
+    \item Aprire due terminali separati
+    \item Nel primo terminale, compilare ed eseguire il server:
+    \begin{lstlisting}[language=bash]
+./serverUDP  # oppure ./serverTCP
+    \end{lstlisting}
+    \item Nel secondo terminale, compilare ed eseguire il client:
+    \begin{lstlisting}[language=bash]
+./clientUDP  # oppure ./clientTCP
+    \end{lstlisting}
+    \item Utilizzare Wireshark per filtrare per porta o protocollo e osservare i pacchetti scambiati
+\end{enumerate}
+
+\subsubsection{Server HTTP}
+\begin{lstlisting}[language=bash, caption=Avvio server HTTP]
+# Compilazione
+gcc serverHTTP.c -o serverHTTP -lpthread
+
+# Esecuzione sulla porta 8000
+./serverHTTP 8000
+
+# Apertura nel browser
+xdg-open "http://127.0.0.1:8000/"
+\end{lstlisting}
+
+\subsubsection{WebSocket}
+Per testare le comunicazioni WebSocket:
+\begin{enumerate}
+    \item Avviare il server (file \texttt{websocket\_server.c} o equivalente)
+    \item Aprire il file \texttt{client.html} in un browser moderno
+    \item Utilizzare l'interfaccia per inviare messaggi broadcast a tutti i client connessi
+\end{enumerate}
+
+\subsubsection{API REST}
+\begin{lstlisting}[language=bash, caption=Test API REST]
+# Compilazione e avvio del server REST
+gcc serverHTTP-REST.c -o rest_server -lpthread
+./rest_server 8080
+
+# Test con curl
+curl "http://127.0.0.1:8080/api/somma?x=5&y=7"
+\end{lstlisting}
+
+\subsubsection{MQTT}
+\begin{lstlisting}[language=bash, caption=Test protocollo MQTT]
+# Avvio del broker Mosquitto
+mosquitto -v
+
+# Esecuzione del publisher
+./publisher
+
+# Esecuzione del subscriber
+./subscriber
+\end{lstlisting}
+
+\section{Analisi del Traffico con Wireshark}
+
+Il repository include file di cattura (\texttt{.pcapng}) per l'analisi del traffico di rete. Per utilizzarli efficacemente:
+
+\begin{enumerate}
+    \item Aprire il file \texttt{.pcapng} corrispondente all'esercizio
+    \item Utilizzare la funzione "Follow TCP/UDP Stream" per ricostruire il dialogo completo
+    \item Analizzare i numeri di sequenza, i flag, l'handshake e le eventuali ritrasmissioni
+    \item Confrontare il comportamento osservato con quello teorico atteso
+\end{enumerate}
+
+\section{Documentazione Teorica}
+
+\subsection{Slide del Corso}
+Nella cartella \texttt{LUCIDI/} sono disponibili le slide ufficiali del corso che coprono i seguenti argomenti:
+\begin{itemize}
+    \item Programmazione socket
+    \item Protocollo HTTP
+    \item Tecnologie WebSocket
+    \item Architetture REST
+    \item Protocollo MQTT
+    \item Architettura TCP/IP
+\end{itemize}
+
+\subsection{Appunti Personali}
+Gli appunti personali dell'autore sono disponibili in \texttt{APPUNTI GOODNOTES/}, mentre il file \texttt{2\_ripasso-reti.pdf} fornisce un riassunto rapido e conciso dei concetti fondamentali di rete in vista dell'esame.
+
+\section{Roadmap e Sviluppi Futuri}
+
+\subsection{TODO List}
+Il repository è in continua evoluzione. Gli sviluppi futuri pianificati includono:
+
+\begin{itemize}
+    \item \textbf{Automazione Build:} Aggiunta di \texttt{Makefile} e script CI con GitHub Actions
+    \item \textbf{Test di Integrazione:} Automatizzazione dei test di integrazione per i servizi REST
+    \item \textbf{Documentazione:} Trascrizione degli appunti GoodNotes in formato Markdown per una migliore accessibilità
+    \item \textbf{Espansione Contenuti:} Aggiunta di ulteriori esempi pratici e casi d'uso avanzati
+\end{itemize}
+
+\section{Contributi e Collaborazione}
+
+\subsection{Linee Guida per i Contributi}
+Il repository accoglie contributi dalla comunità. Per mantenere la coerenza del progetto:
+
+\begin{enumerate}
+    \item Utilizzare branch descrittivi (es. \texttt{feature/nuova-funzionalità}, \texttt{fix/correzione-bug})
+    \item Seguire la convenzione di stile \texttt{clang-format} fornita nel file \texttt{.clang-format} (work-in-progress)
+    \item Aggiornare la documentazione quando si modificano o aggiungono funzionalità
+    \item Testare accuratamente le modifiche prima di sottomettere una pull-request
+\end{enumerate}
+
+\subsection{Processo di Contribuzione}
+\begin{enumerate}
+    \item Fork del repository
+    \item Creazione di un branch per la propria modifica
+    \item Implementazione delle modifiche
+    \item Test delle funzionalità
+    \item Sottomissione di una pull-request con descrizione dettagliata
+\end{enumerate}
+
+\section{Licenza e Utilizzo}
+
+\begin{tcolorbox}[colback=red!10!white,colframe=red!75!black,title=Importante - Licenza]
+Il materiale è fornito esclusivamente per uso didattico. La licenza è attualmente in fase di definizione. È necessario contattare l'autore prima di ridistribuire pubblicamente il contenuto del repository.
+\end{tcolorbox}
+
+\section{Crediti e Riconoscimenti}
+
+\subsection{Autore Principale}
+\textbf{Simone Mattioli}
+\begin{itemize}
+    \item Studente di Informatica, Università degli Studi di Verona
+    \item Sviluppatore del repository
+    \item Anno di corso: 2024/2025
+\end{itemize}
+
+\subsection{Docente del Corso}
+\textbf{Prof. Davide Quaglia}
+\begin{itemize}
+    \item Docente del corso di Programmazione e Sicurezza delle Reti
+    \item Università degli Studi di Verona
+    \item Supervisione accademica del progetto
+\end{itemize}
+
+\section{Link Utili e Risorse Aggiuntive}
+
+\subsection{Repository e Codice}
+\begin{itemize}
+    \item \href{https://github.com/simo-hue/Corso-Programmazione-Sicurezza-delle-Reti}{Repository GitHub Principale}
+    \item \href{https://github.com/simo-hue}{Profilo GitHub dell'autore}
+    \item \href{https://www.linkedin.com/in/simonemattioli2003/}{Linkedin dell'autore}
+\end{itemize}
+
+\subsection{Strumenti e Software}
+\begin{itemize}
+    \item \href{https://www.wireshark.org/}{Wireshark - Analizzatore di protocolli di rete}
+    \item \href{https://mosquitto.org/}{Eclipse Mosquitto - Broker MQTT}
+    \item \href{https://gcc.gnu.org/}{GCC - GNU Compiler Collection}
+    \item \href{https://code.visualstudio.com/}{Visual Studio Code}
+\end{itemize}
+
+\subsection{Documentazione di Riferimento}
+\begin{itemize}
+    \item RFC 793 - Transmission Control Protocol
+    \item RFC 768 - User Datagram Protocol  
+    \item RFC 2616 - Hypertext Transfer Protocol HTTP/1.1
+    \item RFC 6455 - The WebSocket Protocol
+    \item RFC 3986 - Uniform Resource Identifier (URI)
+\end{itemize}
+
+\section{Conclusioni}
+
+Il repository "Corso-Programmazione-Sicurezza-delle-Reti" rappresenta una risorsa completa e ben organizzata per lo studio della programmazione di rete e dei protocolli di sicurezza. La struttura modulare, la documentazione dettagliata e la varietà di esempi pratici lo rendono uno strumento prezioso sia per gli studenti del corso che per chiunque voglia approfondire questi argomenti.
+
+La continua evoluzione del progetto, testimoniata dalla roadmap di sviluppi futuri e dall'apertura ai contributi della comunità, garantisce che questa risorsa rimanga aggiornata e sempre più completa nel tempo.
+
+L'approccio pratico, combinato con una solida base teorica fornita dalle slide del corso e dagli appunti personali, offre un percorso di apprendimento completo che spazia dalla teoria all'implementazione pratica, dall'analisi del traffico di rete alla comprensione dei protocolli moderni.
+
+\vfill
+\begin{center}
+\textit{Ultima revisione: \today}
+\end{center}
+
+\end{document}

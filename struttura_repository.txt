@@ -1,0 +1,243 @@
+.
+├── APPUNTI GOODNOTES
+│   ├── CGI.pdf
+│   ├── correzione prima esercitazione.pdf
+│   ├── dal web ai webservices.pdf
+│   ├── ESAME.pdf
+│   ├── https e (da casa).pdf
+│   ├── interfaccia socket.pdf
+│   ├── javascript e web app.pdf
+│   ├── LUCIDI
+│   │   ├── 1_intro.pdf
+│   │   ├── 2_ripasso-reti.pdf
+│   │   ├── 2_ripasso-reti.pdf.pdf
+│   │   ├── 2025 - Calendario - PSR.pdf
+│   │   ├── 5_sicurezza_intro.pdf
+│   │   ├── 6_crittografia.pdf
+│   │   ├── 7_integrita_autenticazione-ridotto.pdf
+│   │   ├── 9_IDS_Firewall.pdf
+│   │   ├── 9_SSL_PGP_Wireless.pdf
+│   │   ├── analisi-rete.pdf.pdf
+│   │   ├── Impostazione-PC-applicazioni-socket.pdf
+│   │   ├── Informativa PROBEN.pdf
+│   │   ├── Lab-ApplicazioniReteSocket.pdf
+│   │   ├── Lab-ApplicazioniReteSocket.pdf.pdf
+│   │   ├── schema-firewall.pdf
+│   │   ├── Schema-pratico-autenticazione-client-server.pdf
+│   │   ├── schemi-protocolli-sicurezza.pdf
+│   │   ├── web-webservices.pdf
+│   │   ├── web-webservices.pdf.pdf
+│   │   └── Websocket.pdf
+│   ├── MICROSERVIZI E LOAD BALANCING.pdf
+│   ├── Prima Lezione dopo Ripasso.pdf
+│   ├── schema riassuntivo finale.pdf
+│   └── SOA.pdf
+├── documentazione.aux
+├── documentazione.fdb_latexmk
+├── documentazione.fls
+├── documentazione.log
+├── documentazione.out
+├── documentazione.pdf
+├── documentazione.synctex.gz
+├── documentazione.tex
+├── documentazione.toc
+├── DOMANDE ESAme
+│   ├── es1.jpg
+│   └── es2.jpg
+├── FILE FORNITI DAL PROF
+│   ├── Esempi-client-server
+│   │   ├── clientTCP.c
+│   │   ├── clientTCPChar.c
+│   │   ├── clientTCPIO.c
+│   │   ├── clientUDP_inc.c
+│   │   ├── clientUDP.c
+│   │   ├── fileCopy.c
+│   │   ├── network.c
+│   │   ├── network.h
+│   │   ├── serverTCP.c
+│   │   ├── serverTCPChar.c
+│   │   ├── serverTCPIO.c
+│   │   ├── serverUDP_inc.c
+│   │   └── serverUDP.c
+│   ├── Esempi-web
+│   │   ├── css.html
+│   │   ├── esempio-parser.c
+│   │   ├── form-file.html
+│   │   ├── form-get.html
+│   │   ├── form-post.html
+│   │   ├── immagini.html
+│   │   ├── javascript-evento.html
+│   │   ├── javascript-load.html
+│   │   ├── javascript-timer.html
+│   │   ├── javascript-timer2.html
+│   │   ├── javascript.html
+│   │   ├── link.html
+│   │   ├── network.c
+│   │   ├── network.h
+│   │   ├── prova.html
+│   │   ├── serverHTTP-CGI.c
+│   │   ├── serverHTTP.c
+│   │   ├── sommatrice-web.html
+│   │   └── styles.css
+│   ├── Esercitazione-MQTT-semplificata
+│   │   ├── ISRG_Root_X1.pem
+│   │   ├── Istruzioni-installazione-MQTT.pdf
+│   │   ├── mqtt-localhost.pcapng
+│   │   └── Pub-sub.pdf
+│   ├── security
+│   │   ├── circolare_copie_di_salvataggio_2023.pdf
+│   │   ├── iso27001-2013
+│   │   ├── Linee-guida-UNIVR.pdf
+│   │   ├── sicurezza_appunti_Bergami.pdf
+│   │   └── sicurezza_reti.pdf
+│   ├── Webservice
+│   │   ├── clientREST-GET.c
+│   │   ├── clientREST-POST.c
+│   │   ├── ClientREST.java
+│   │   ├── ClientThreadREST.java
+│   │   ├── network.c
+│   │   ├── network.h
+│   │   ├── prime-number-interval.c
+│   │   └── serverHTTP-REST.c
+│   ├── WebSocket_Chat
+│   │   ├── log.txt
+│   │   ├── node_modules
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   ├── public
+│   │   ├── README.md
+│   │   ├── server.js
+│   │   └── test.txt
+│   └── wireshark-analisi-rete
+│       ├── analisi-rete.pdf
+│       ├── busyNetwork.cap
+│       ├── capture.cap
+│       ├── pingCapture.cap
+│       └── simpleHTTP.cap
+├── LUCIDI
+│   ├── 2_ripasso-reti.pdf
+│   ├── Impostazione-PC-applicazioni-socket.pdf
+│   ├── Istruzioni-installazione-MQTT.pdf
+│   ├── Lab-ApplicazioniReteSocket.pdf
+│   ├── Pub-sub.pdf
+│   ├── schema-firewall.pdf
+│   ├── SICUREZZA
+│   │   ├── 5_sicurezza_intro.pdf
+│   │   ├── circolare_copie_di_salvataggio_2023.pdf
+│   │   ├── iso27001-2013
+│   │   ├── Linee-guida-UNIVR.pdf
+│   │   ├── sicurezza_appunti_Bergami.pdf
+│   │   └── sicurezza_reti.pdf
+│   ├── sicurezza_reti Appunti AMOS.pdf
+│   ├── web-webservices.pdf
+│   └── Websocket.pdf
+├── MIEI ESERCIZI
+│   ├── Esempi Client Server
+│   │   ├── TCP
+│   │   └── UDP
+│   ├── Esempi-client-server
+│   │   ├── clientTCP.c
+│   │   ├── clientTCPChar.c
+│   │   ├── clientTCPIO.c
+│   │   ├── clientUDP
+│   │   ├── clientUDP_inc.c
+│   │   ├── clientUDP.c
+│   │   ├── fileCopy.c
+│   │   ├── network.c
+│   │   ├── network.h
+│   │   ├── serverTCP.c
+│   │   ├── serverTCPChar.c
+│   │   ├── serverTCPIO.c
+│   │   ├── serverUDP
+│   │   ├── serverUDP_inc.c
+│   │   └── serverUDP.c
+│   ├── Esempi-web
+│   │   ├── css.html
+│   │   ├── esempio-parser.c
+│   │   ├── form-file.html
+│   │   ├── form-get.html
+│   │   ├── form-post.html
+│   │   ├── immagini.html
+│   │   ├── javascript-evento.html
+│   │   ├── javascript-load.html
+│   │   ├── javascript-timer.html
+│   │   ├── javascript-timer2.html
+│   │   ├── javascript.html
+│   │   ├── link.html
+│   │   ├── network.c
+│   │   ├── network.h
+│   │   ├── prova.html
+│   │   ├── server
+│   │   ├── serverHTTP-CGI.c
+│   │   ├── serverHTTP.c
+│   │   ├── sommatrice-web.html
+│   │   └── styles.css
+│   ├── Esercitazione-MQTT-semplificata
+│   │   ├── ISRG_Root_X1.pem
+│   │   ├── Istruzioni-installazione-MQTT.pdf
+│   │   ├── mqtt-localhost.pcapng
+│   │   └── Pub-sub.pdf
+│   ├── web services
+│   │   ├── CGI
+│   │   ├── polling pagina ansa
+│   │   ├── REST
+│   │   ├── server HTTP Modificato ( pag 36 )
+│   │   └── upload sul server
+│   ├── Webservice
+│   │   ├── cget
+│   │   ├── clientREST-GET.c
+│   │   ├── clientREST-POST.c
+│   │   ├── ClientREST.class
+│   │   ├── ClientREST.java
+│   │   ├── ClientThreadREST.java
+│   │   ├── cpost
+│   │   ├── Mio_serverHTTP-REST.c
+│   │   ├── mynetwork.o
+│   │   ├── network.c
+│   │   ├── network.h
+│   │   ├── prime-number-interval.c
+│   │   ├── RESTAPI.class
+│   │   ├── server
+│   │   ├── serverHTTP-REST.c
+│   │   └── srv
+│   ├── WebSocket_Chat
+│   │   ├── log.txt
+│   │   ├── node_modules
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   ├── public
+│   │   ├── README.md
+│   │   ├── server.js
+│   │   └── test.txt
+│   └── wireshark-analisi-rete
+│       ├── analisi-rete.pdf
+│       ├── busyNetwork.cap
+│       ├── capture.cap
+│       ├── pingCapture.cap
+│       └── simpleHTTP.cap
+├── NotebookLM Mind Map.png
+├── PER ESAME
+│   ├── CLIENT-SERVER
+│   │   ├── MAX 5 RICHIESTE
+│   │   ├── SOMMATRICE PIÙ CLIENT ( tcp )
+│   │   ├── SOMMATRICE PIÙ CLIENT ( udp )
+│   │   ├── SOMMATRICE TCP
+│   │   ├── SOMMATRICE UDP
+│   │   └── TRASFERIMENTO FILE
+│   └── WEB e WEBSERVICES
+│       ├── CALCOLATRICE CON CGI
+│       ├── CHAT CON WEB-SOCKET
+│       ├── FORM GET
+│       ├── FORM POST
+│       ├── PAGINA CHE SI RICARICA ( ansa )
+│       ├── PUB-SUB ( mqtt )
+│       ├── REST GET IN C ( somma & numeri Primi )
+│       ├── REST GET IN JAVA ( somma & numeri Primi )
+│       ├── REST GET IN JAVA + THREAD ( somma & numeri primi )
+│       ├── REST POST IN C ( somma & numeri Primi )
+│       ├── RICHIESTA RISORSE SUL SERVER TRAMITE URL
+│       └── UPLOAD SUL SERVER
+├── README.md
+└── struttura_repository.txt
+
+57 directories, 184 files
