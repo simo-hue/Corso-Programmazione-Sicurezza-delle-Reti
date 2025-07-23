@@ -18,11 +18,12 @@ int isPrime(int n) {
     return 1;
 }
 
-// Funzione per contare i numeri primi in un intervallo
-int contaNumeroPrimi(int min, int max) {
+// Funzione per trovare i numeri primi in un intervallo e restituire sia il conteggio che la lista
+int trovaNumeroPrimi(int min, int max, int *lista_primi, int max_size) {
     int count = 0;
-    for (int i = min; i <= max; i++) {
+    for (int i = min; i <= max && count < max_size; i++) {
         if (isPrime(i)) {
+            lista_primi[count] = i;
             count++;
         }
     }
@@ -99,10 +100,11 @@ int main(){
         }
         // Gestione del nuovo servizio numeri-primi
         else if(strstr(url, "numeri-primi")!=NULL)  {
-            printf("[SERVER] Chiamata a funzione conteggio numeri primi\n");
+            printf("[SERVER] Chiamata a funzione ricerca numeri primi\n");
             
             char *function, *param1, *param2;
             int min, max, count;
+            int lista_primi[1000]; // Array per contenere i numeri primi (max 1000)
    
             // skeleton: decodifica (de-serializzazione) dei parametri
             function = strtok(url, "?&");
@@ -116,15 +118,23 @@ int main(){
             max = atoi(strtok(NULL,"="));
             
             printf("[SERVER] Parametri: min=%d, max=%d\n", min, max);
-            printf("[SERVER] Inizio calcolo numeri primi...\n");
+            printf("[SERVER] Inizio ricerca numeri primi...\n");
             
             // chiamata alla business logic
-            count = contaNumeroPrimi(min, max);
+            count = trovaNumeroPrimi(min, max, lista_primi, 1000);
             
-            printf("[SERVER] Calcolo completato. Numeri primi trovati: %d\n", count);
+            printf("[SERVER] Ricerca completata. Numeri primi trovati: %d\n", count);
             
-            // skeleton: codifica (serializzazione) del risultato
-            fprintf(connfd,"HTTP/1.1 200 OK\r\n\r\n{\r\n    \"numeri_primi\":%d,\r\n    \"intervallo\":\"[%d,%d]\"\r\n}\r\n", count, min, max);
+            // skeleton: codifica (serializzazione) del risultato con lista
+            fprintf(connfd,"HTTP/1.1 200 OK\r\n\r\n{\r\n    \"count\":%d,\r\n    \"intervallo\":\"[%d,%d]\",\r\n    \"primi\":[", count, min, max);
+            
+            // Aggiungi la lista dei numeri primi
+            for(int j = 0; j < count; j++) {
+                if(j > 0) fprintf(connfd, ",");
+                fprintf(connfd, "%d", lista_primi[j]);
+            }
+            
+            fprintf(connfd, "]\r\n}\r\n");
         }
         else {
             printf("[SERVER] Funzione non riconosciuta: %s\n", url);

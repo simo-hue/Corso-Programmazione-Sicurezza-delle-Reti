@@ -4,6 +4,16 @@
     Posso lanciare:
         - ./client-get numeri-primi 0 30
         - ./client-get calcola-somma 10 30
+
+
+            !!! RICHIESTE TROPPO AMPIE SUPERANO L'MTU !!!
+
+    JSON DEL SERVER:
+        {
+        "count":8,
+        "intervallo":"[2,20]",
+        "primi":[2,3,5,7,11,13,17,19]
+        }
 */
 #include "network.h"
 #include <stdio.h>
@@ -157,18 +167,33 @@ int numeriPrimi(float a, float b){
     body_start += 4; // Salta "\r\n\r\n"
     //printf("DEBUG: Body della risposta: %s\n", body_start);
     
-    // Cerca il valore dopo i due punti nella risposta JSON
-    // Formato atteso: {"count":numero}
-    char* colon_pos = strstr(body_start, ":");
-    if (colon_pos == NULL) {
-        printf("ERRORE: ':' non trovato nella risposta\n");
+    // Parsing del JSON per estrarre count e lista primi
+    char* count_pos = strstr(body_start, "\"count\":");
+    if (count_pos == NULL) {
+        printf("ERRORE: 'count' non trovato nella risposta\n");
         return -1;
     }
     
-    int result = atoi(colon_pos + 1);
-    //printf("DEBUG: Risultato parsing: %d\n", result);
+    int count = atoi(count_pos + 8); // 8 = lunghezza di "\"count\":"
     
-    return result;
+    // Trova e stampa la lista dei numeri primi
+    char* primi_start = strstr(body_start, "\"primi\":[");
+    if (primi_start != NULL) {
+        primi_start += 9; // Salta "\"primi\":["
+        char* primi_end = strstr(primi_start, "]");
+        
+        if (primi_end != NULL) {
+            // Crea una copia della stringa contenente la lista
+            int list_len = primi_end - primi_start;
+            char primi_list[MTU];
+            strncpy(primi_list, primi_start, list_len);
+            primi_list[list_len] = '\0';
+            
+            printf("Lista dei numeri primi trovati: [%s]\n", primi_list);
+        }
+    }
+    
+    return count;
 }
 
 int main(int argc, char **argv){
