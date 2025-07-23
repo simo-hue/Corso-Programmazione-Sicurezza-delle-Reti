@@ -1,11 +1,3 @@
-// ClientREST.java – versione aggiornata (20 maggio 2025)
-// Dimostrazione di chiamata REST in Java per due servizi:
-//   • /calcola-somma            → { "somma": <float> }
-//   • /numeri-primi            → { "totale_numeri_primi": <int>, "primi": [ ... ] }
-//  Compilazione:  javac ClientREST.java
-//  Esecuzione es.: java ClientREST numeri-primi 1 30
-
-
 /*
 
     SU WIRESHARK applico questo filtro: http.request.method == "GET" && tcp.port == 8000

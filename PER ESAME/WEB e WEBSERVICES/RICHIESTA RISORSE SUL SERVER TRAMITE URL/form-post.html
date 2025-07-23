@@ -1,0 +1,29 @@
+<!-- Va attivato il serverHTTP.c -> gcc serverHTTP.c network.c -o server -lpthread
+
+    Noto che NON ci sono i parametri nell'URL a differenza del GET e sono nel corpo della richiesta -> NON ho limiti di lunghezza
+
+    Se utilizzo HTTP sono comunque in CHIARO ( quindi NON sicuri ) -> TCP mi assicura l'ordine e l'integrità dei dati ( AFFIDABILITÀ ), ma non la loro riservatezza ( SICUREZZA )
+
+    Tramite Wireshark, applico il filtro: http.request.method == "POST" && tcp.port == 8000 e li posso vedere 
+-->
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>The method Attribute</h2>
+
+<p>This form will be submitted using the POST method:</p>
+
+<form action="http://localhost:8000/action" target="_blank" method="post">
+  <label for="fname">First name:</label><br>
+  <input type="text" id="fname" name="fname" value="Simone"><br>
+  <label for="lname">Last name:</label><br>
+  <input type="text" id="lname" name="lname" value="Mattioli"><br><br>
+  <input type="submit" value="Submit">
+</form>
+
+<p>Notice that the form values is NOT visible in the address bar of the new browser tab.</p>
+
+</body>
+</html>
+

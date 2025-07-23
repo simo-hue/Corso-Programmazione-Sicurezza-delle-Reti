@@ -3,6 +3,9 @@
         "*.dbclient-js": "javascript",
         "stdint.h": "c",
         "network.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "limits": "c",
+        "ratio": "c",
+        "algorithm": "c"
     }
 }

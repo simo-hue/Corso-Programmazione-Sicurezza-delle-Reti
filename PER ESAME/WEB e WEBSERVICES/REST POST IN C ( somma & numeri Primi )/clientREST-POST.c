@@ -1,8 +1,3 @@
-// Ora supporta tre modalità:
-//   1) POST di un ordine demo (default senza argomenti)
-//   2) GET numeri-primi a b   → stampa JSON + conteggio
-//   3) GET calcola-somma a b   → stampa JSON + somma
-
 /*
     SU WIRESHARK applico questo filtro: http.request.method == "POST" && tcp.port == 8000
 

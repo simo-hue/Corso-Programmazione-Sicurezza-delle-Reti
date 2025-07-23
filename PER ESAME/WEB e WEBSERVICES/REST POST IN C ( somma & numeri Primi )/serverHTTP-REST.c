@@ -1,6 +1,3 @@
-// Ora l'endpoint /numeri-primi restituisce **anche** l'elenco dei numeri primi trovati:
-//    { "totale_numeri_primi": N, "primi": [2,3,5,...] }
-
 #include "network.h"
 
 /***************** BUSINESS LOGIC *****************/

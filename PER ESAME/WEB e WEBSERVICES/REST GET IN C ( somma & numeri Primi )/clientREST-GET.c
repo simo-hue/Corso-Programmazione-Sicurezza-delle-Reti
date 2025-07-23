@@ -1,8 +1,3 @@
-// Ora visualizza **l’intero JSON** restituito dal server per l’endpoint /numeri-primi.
-// Restano disponibili entrambe le funzioni:
-//    • calcola-somma a b
-//    • numeri-primi a b
-
 /*
     SU WIRESHARK applico questo filtro: http.request.method == "GET" && tcp.port == 8000
 

@@ -81,7 +81,7 @@ int main(){
         } else { // se non esiste
             // Allora restituisco un errore
             fputs("HTTP/1.1 404 Not Found\r\n\r\n", connfd);
-            fputs("<html><body><h1>File non trovato</h1></body></html>", connfd);
+            fputs("<html><body><h1>File non trovato Nella Repository del Server</h1></body></html>", connfd);
         }
         fclose(connfd);
                 

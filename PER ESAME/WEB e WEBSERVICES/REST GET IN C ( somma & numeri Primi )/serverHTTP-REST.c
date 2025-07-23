@@ -1,6 +1,3 @@
-// Ora l'endpoint /numeri-primi restituisce **anche** l'elenco dei numeri primi trovati:
-//    { "totale_numeri_primi": N, "primi": [2,3,5,...] }
-
 #include "network.h"
 
 /***************** BUSINESS LOGIC *****************/
@@ -73,7 +70,7 @@ int main(void){
                 send_json(connfd,400,"{ \"errore\": \"Intervallo non valido\" }\n");
             }else{
                 /* costruiamo l'array JSON dei primi */
-                char primiBuf[MTU]="";      // contenitore numeri separati da virgola
+                char primiBuf[50000]="";      // contenitore numeri separati da virgola
                 int  counter=0;
                 char tmp[16];
                 for(int i=a;i<=b;++i){

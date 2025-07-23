@@ -6,7 +6,7 @@ while(name == "" || name == null) {
 }
 
 // Query DOM
-var message = document.getElementById('message'),
+var message = document.getElementById('messaggio'),
    sender = document.getElementById('sender'),
    btn = document.getElementById('send'),
    output = document.getElementById('output'),
@@ -27,7 +27,7 @@ socket.on('connect', function() {
 btn.addEventListener('click', function(){
    if (message.value != "") {    
        console.log('Invio messaggio:', message.value);
-       socket.emit('message', {
+       socket.emit('messaggio', {
         message: message.value,
         sender: sender.value,
        });
@@ -42,7 +42,7 @@ message.onkeydown = function(e){
    });
 }
 
-socket.on('UploadChat', function(data){
+socket.on('aggiornamento', function(data){
    console.log('Messaggio ricevuto:', data);
    feedback.innerHTML = '';
    output.innerHTML += '<p><strong>' + data.sender + ': </strong>' + data.message + '</p>';
