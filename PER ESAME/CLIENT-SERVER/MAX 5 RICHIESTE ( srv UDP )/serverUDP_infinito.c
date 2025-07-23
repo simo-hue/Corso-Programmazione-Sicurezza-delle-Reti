@@ -15,10 +15,12 @@ int main(void) {
     
     socket = createUDPInterface(35000);
     
+    // cliclo infinito e quindi NON TERMINERÀ mai
     while(true) {
     
         printf("[SERVER] Sono in attesa di richieste da qualche client\n");
     
+        // Rimango in attesa per una richiesta UDP
         UDPReceive(socket, &request, sizeof(request), hostAddress, &port);
         
         printf("[SERVER] Ho ricevuto un messaggio da host/porta %s/%d\n", hostAddress, port);
@@ -27,6 +29,7 @@ int main(void) {
         
         response = request;
     
+        // Mando risposta al client
         UDPSend(socket, &response, sizeof(response), hostAddress, port);
     }
     printf("[SERVER] Ho sodisfatto 5 richieste.\n");

@@ -5,14 +5,14 @@ int main(void) {
     socketif_t socket;
     connection_t connection;
     
-    // Creo il Server
+    // Istanazio interfaccia SOCKET
     socket = createTCPServer(35000);
     if (socket < 0){
         printf("[SERVER] Errore di creazione del socket: %i\n", socket);
     }
     else
     {
-        // Sono aperto a nuove connessioni
+        // Sono aperto a nuove connessioni -> mi metto in ascolto/attesa
         printf("[SERVER] Sono in attesa di richieste di connessione da qualche client\n");    
         connection = acceptConnection(socket);
 

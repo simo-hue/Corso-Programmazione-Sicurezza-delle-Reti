@@ -11,6 +11,7 @@ int main(void) {
      
     printf("Inserisci un numero intero: ( 0 per terminare )\n");
     
+    // Continuo ad inviare al server NUMERI IN INPUT fino a che NON ricevo lo 0
     while (1) {
         printf(">> ");
         scanf("%d", &request);
@@ -18,6 +19,7 @@ int main(void) {
         if (request == 0) break;
     }
     
+    // Rimango in attesa per una richiesta UDP
     if(UDPReceive(socket, &response, sizeof(response), hostAddress, &port) > 0){
         printf("[CLIENT] Somma ricevuta dal server: %d\n", response);
     } else {

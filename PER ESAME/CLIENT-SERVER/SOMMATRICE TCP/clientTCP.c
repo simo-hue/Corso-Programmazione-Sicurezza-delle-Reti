@@ -6,12 +6,17 @@ int main(void) {
  	
     // Istanziazione dell’interfaccia socket e apertura della connessione TCP (three-way handshake)
     printf("[CLIENT] Creo una connessione logica col server\n");
+
+    // Provo ad aprire la connessione TCP -> 3 WAY HANDSHAKE
     connection = createTCPConnection("localhost", 35000);
+
+    // Controllo la mia richiesta di CONNESSIONE CON IL SRV
     if (connection < 0) {
         printf("[CLIENT] Errore nella connessione al server: %i\n", connection);
     }
     else
     {
+        // Fino a che non inserisco 0
         while (request != 0)
         {
             // Chiedo INPUT

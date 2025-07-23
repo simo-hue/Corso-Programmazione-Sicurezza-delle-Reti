@@ -1,6 +1,3 @@
-// Ora l'endpoint /numeri-primi restituisce **anche** l'elenco dei numeri primi trovati:
-//    { "totale_numeri_primi": N, "primi": [2,3,5,...] }
-
 #include "network.h"
 
 /***************** BUSINESS LOGIC *****************/
@@ -76,6 +73,13 @@ int main(void){
                 char primiBuf[MTU]="";      // contenitore numeri separati da virgola
                 int  counter=0;
                 char tmp[16];
+                
+                // Timer per TEMPO:
+                struct timespec start, end;
+                clock_gettime(CLOCK_REALTIME, &start);
+                printf("Inizio il calcolo\n");
+                
+                // Inizio del Calcolo
                 for(int i=a;i<=b;++i){
                     if(is_prime(i)){
                         if(counter>0) strncat(primiBuf,",",sizeof(primiBuf)-strlen(primiBuf)-1);
@@ -84,6 +88,13 @@ int main(void){
                         ++counter;
                     }
                 }
+                // Calcolo della differenza in secondi
+                clock_gettime(CLOCK_REALTIME, &end);
+                double time_spent = (end.tv_sec - start.tv_sec) + 
+                                (end.tv_nsec - start.tv_nsec) / 1000000000.0;
+
+                printf("Tempo impiegato per il calcolo: %f secondi\n", time_spent);
+
                 char body[MTU*2];
                 snprintf(body,sizeof(body),
                          "{ \"totale_numeri_primi\": %d, \"primi\": [%s] }\n",

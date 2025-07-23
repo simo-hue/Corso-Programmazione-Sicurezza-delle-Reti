@@ -10,7 +10,7 @@ int main(void) {
     
     printf("[SERVER] Sono in attesa di richieste da qualche client\n");
     
-    
+    // Fino a che NON ricevo il "CODICE" di USCITA -> 0
     while(request != 0){
 
             // Ricevo la richiesta dal client
@@ -22,7 +22,8 @@ int main(void) {
             printf("[SERVER] Somma parziale: %d\n", somma);
 
         }
-        // Mando la risposta finale
+        
+        // Mando la risposta finale -> SOMMA EFFETTIVA
         printf("[SERVER] Invio la risposta al client con SOMMA COMPLETA: %d\n", somma);
         UDPSend(socket, &somma, sizeof(somma), hostAddress, port);
     
