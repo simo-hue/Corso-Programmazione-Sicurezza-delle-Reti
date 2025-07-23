@@ -2,7 +2,7 @@
     SU WIRESHARK applico questo filtro: http.request.method == "GET" && tcp.port == 8000
 
     Posso lanciare:
-        - ./client-get numeri-primi 0 30
+        - ./client-get numeri-primi 1 30
         - ./client-get calcola-somma 10 30
 
 
