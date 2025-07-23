@@ -91,8 +91,17 @@ int main(){
             
             printf("[SERVER] Parametri: val1=%f, val2=%f\n", val1, val2);
             
+            // Timer per TEMPO:
+            struct timespec start, end;
+            clock_gettime(CLOCK_REALTIME, &start);
+            
             // chiamata alla business logic
             somma = calcolaSomma(val1, val2);
+
+            // Calcolo della differenza in secondi
+            clock_gettime(CLOCK_REALTIME, &end);
+            double time_spent = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
+            printf("Tempo impiegato per il calcolo: %f secondi\n", time_spent);
             
             // skeleton: codifica (serializzazione) del risultato
             fprintf(connfd,"HTTP/1.1 200 OK\r\n\r\n{\r\n    \"somma\":%f\r\n}\r\n", somma);
@@ -102,6 +111,10 @@ int main(){
         else if(strstr(url, "numeri-primi")!=NULL)  {
             printf("[SERVER] Chiamata a funzione ricerca numeri primi\n");
             
+            // Timer per TEMPO:
+            struct timespec start, end;
+            clock_gettime(CLOCK_REALTIME, &start);
+
             char *function, *param1, *param2;
             int min, max, count;
             int lista_primi[1000]; // Array per contenere i numeri primi (max 1000)
@@ -122,11 +135,16 @@ int main(){
             
             // chiamata alla business logic
             count = trovaNumeroPrimi(min, max, lista_primi, 1000);
-            
+
             printf("[SERVER] Ricerca completata. Numeri primi trovati: %d\n", count);
             
             // skeleton: codifica (serializzazione) del risultato con lista
             fprintf(connfd,"HTTP/1.1 200 OK\r\n\r\n{\r\n    \"count\":%d,\r\n    \"intervallo\":\"[%d,%d]\",\r\n    \"primi\":[", count, min, max);
+            
+            // Calcolo della differenza in secondi
+            clock_gettime(CLOCK_REALTIME, &end);
+            double time_spent = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
+            printf("Tempo impiegato per il calcolo: %f secondi\n", time_spent);
             
             // Aggiungi la lista dei numeri primi
             for(int j = 0; j < count; j++) {
