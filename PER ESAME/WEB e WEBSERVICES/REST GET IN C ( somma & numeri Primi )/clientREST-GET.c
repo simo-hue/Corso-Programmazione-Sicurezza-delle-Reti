@@ -5,86 +5,213 @@
         - ./client-get numeri-primi 0 30
         - ./client-get calcola-somma 10 30
 */
-
 #include "network.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-/********************* FUNC: calcolaSomma *************************/
-static float calcolaSomma(float val1, float val2){
-    char url[MTU];
+float calcolaSomma(float val1, float val2)  {
     char response[MTU];
-
-    snprintf(url, sizeof(url),
-             "http://localhost:8000/calcola-somma?param1=%f&param2=%f",
-             val1, val2);
-
-    int status = doGET(url, response, sizeof(response));
-    if(status != 200){
-        fprintf(stderr, "[CLIENT] Errore HTTP: %d\n", status);
-        return -1.0f;
-    }
-
-    /* Mostriamo il JSON ricevuto (opzionale) */
-    // printf("JSON ricevuto: %s\n", response);
-
-    float somma = 0.0f;
-    if(sscanf(response, "{ \"somma\": %f", &somma) != 1){
-        fprintf(stderr, "[CLIENT] Formato JSON inatteso: %s\n", response);
-        return -1.0f;
-    }
-    return somma;
-}
-
-/********************* FUNC: primeNumber *************************/
-/* Ora stampa anche il JSON completo prima di elaborarlo */
-static int primeNumber(int a, int b){
-    char url[MTU];
-    char response[MTU];
-
-    snprintf(url, sizeof(url),
-             "http://localhost:8000/numeri-primi?param1=%d&param2=%d", a, b);
-
-    int status = doGET(url, response, sizeof(response));
-    if(status != 200){
-        fprintf(stderr, "[CLIENT] Errore HTTP: %d\n", status);
+    
+    ////printf("DEBUG: Inizio funzione calcolaSomma\n");
+    ////printf("DEBUG: val1=%f, val2=%f\n", val1, val2);
+    
+    // Inizializza il buffer
+    memset(response, 0, MTU);
+    
+    // Creiamo la richiesta HTTP manualmente
+    char path[MTU];
+    sprintf(path, "/calcola-somma?param1=%f&param2=%f", val1, val2);
+   
+    socketif_t sockfd = createTCPConnection("localhost", 8000);
+    if (sockfd < 0) {
+        printf("ERRORE: Impossibile connettersi al server (codice: %d)\n", sockfd);
         return -1;
     }
-
-    /* --- stampa del JSON grezzo --- */
-    printf("\nJSON numeri‑primi ricevuto:\n%s\n\n", response);
-
-    int totale = 0;
-    if(sscanf(response, "{ \"totale_numeri_primi\": %d", &totale) != 1){
-        fprintf(stderr, "[CLIENT] Formato JSON inatteso o campo mancante.\n");
+    
+    // Creiamo la richiesta HTTP
+    char http_request[MTU];
+    sprintf(http_request, 
+        "GET %s HTTP/1.1\r\n"
+        "Host: localhost:8000\r\n"
+        "Connection: close\r\n"
+        "\r\n", 
+        path);
+    
+    ////printf("DEBUG: Richiesta HTTP:\n%s", http_request);
+    
+    // Inviamo la richiesta
+    int sent = TCPSend(sockfd, http_request, strlen(http_request));
+    if (sent < 0) {
+        printf("ERRORE: Impossibile inviare la richiesta\n");
+        closeConnection(sockfd);
         return -1;
     }
-    return totale;
+    
+    ////printf("DEBUG: Richiesta inviata (%d bytes)\n", sent);
+    
+    // Riceviamo la risposta
+    int received = TCPReceive(sockfd, response, MTU-1);
+    if (received < 0) {
+        printf("ERRORE: Impossibile ricevere la risposta\n");
+        closeConnection(sockfd);
+        return -1;
+    }
+    
+    response[received] = '\0';
+    ////printf("DEBUG: Risposta ricevuta (%d bytes):\n%s\n", received, response);
+    
+    closeConnection(sockfd);
+    
+    // Parsing della risposta
+    char* body_start = strstr(response, "\r\n\r\n");
+    if (body_start == NULL) {
+        printf("ERRORE: Formato risposta HTTP non valido\n");
+        return -1;
+    }
+    
+    body_start += 4; // Salta "\r\n\r\n"
+    ////printf("DEBUG: Body della risposta: %s\n", body_start);
+    
+    // Cerca il valore dopo i due punti
+    char* colon_pos = strstr(body_start, ":");
+    if (colon_pos == NULL) {
+        printf("ERRORE: ':' non trovato nella risposta\n");
+        return -1;
+    }
+    
+    float result = atof(colon_pos + 1);
+    ////printf("DEBUG: Risultato parsing: %f\n", result);
+    
+    return result;
 }
 
-/********************* MAIN *************************/
+int numeriPrimi(float a, float b){
+    char response[MTU];
+    int min = (int)a;
+    int max = (int)b;
+    
+    //printf("DEBUG: Inizio funzione numeriPrimi\n");
+    //printf("DEBUG: min=%d, max=%d\n", min, max);
+    
+    // Inizializza il buffer
+    memset(response, 0, MTU);
+    
+    // Creiamo la richiesta HTTP per la funzione numeri-primi
+    char path[MTU];
+    sprintf(path, "/numeri-primi?min=%d&max=%d", min, max);
+    //printf("DEBUG: Path creato: %s\n", path);
+    
+    // Connessione al server
+    //printf("DEBUG: Tentativo di connessione al server...\n");
+    
+    socketif_t sockfd = createTCPConnection("localhost", 8000);
+    if (sockfd < 0) {
+        printf("ERRORE: Impossibile connettersi al server (codice: %d)\n", sockfd);
+        return -1;
+    }
+    
+    //printf("DEBUG: Connessione stabilita\n");
+    
+    // Creiamo la richiesta HTTP
+    char http_request[MTU];
+    sprintf(http_request, 
+        "GET %s HTTP/1.1\r\n"
+        "Host: localhost:8000\r\n"
+        "Connection: close\r\n"
+        "\r\n", 
+        path);
+    
+    //printf("DEBUG: Richiesta HTTP:\n%s", http_request);
+    
+    // Inviamo la richiesta
+    int sent = TCPSend(sockfd, http_request, strlen(http_request));
+    if (sent < 0) {
+        printf("ERRORE: Impossibile inviare la richiesta\n");
+        closeConnection(sockfd);
+        return -1;
+    }
+    
+    //printf("DEBUG: Richiesta inviata (%d bytes)\n", sent);
+    
+    // Riceviamo la risposta
+    int received = TCPReceive(sockfd, response, MTU-1);
+    if (received < 0) {
+        printf("ERRORE: Impossibile ricevere la risposta\n");
+        closeConnection(sockfd);
+        return -1;
+    }
+    
+    response[received] = '\0';
+    //printf("DEBUG: Risposta ricevuta (%d bytes):\n%s\n", received, response);
+    
+    closeConnection(sockfd);
+    
+    // Parsing della risposta
+    char* body_start = strstr(response, "\r\n\r\n");
+    if (body_start == NULL) {
+        printf("ERRORE: Formato risposta HTTP non valido\n");
+        return -1;
+    }
+    
+    body_start += 4; // Salta "\r\n\r\n"
+    //printf("DEBUG: Body della risposta: %s\n", body_start);
+    
+    // Cerca il valore dopo i due punti nella risposta JSON
+    // Formato atteso: {"count":numero}
+    char* colon_pos = strstr(body_start, ":");
+    if (colon_pos == NULL) {
+        printf("ERRORE: ':' non trovato nella risposta\n");
+        return -1;
+    }
+    
+    int result = atoi(colon_pos + 1);
+    //printf("DEBUG: Risultato parsing: %d\n", result);
+    
+    return result;
+}
+
 int main(int argc, char **argv){
-    if(argc != 4){
-        printf("USO: %s <calcola-somma|numeri-primi> op1 op2\n", argv[0]);
+    
+    //printf("DEBUG: Inizio main con %d argomenti\n", argc);
+    
+    if(argc < 4)    {
+        printf("USAGE: %s tipofunzione op1 op2\n", argv[0]);
+        printf("Funzioni disponibili:\n");
+        printf("  calcola-somma <val1> <val2>  - Calcola la somma di due numeri\n");
+        printf("  numeri-primi <min> <max>     - Conta i numeri primi nell'intervallo [min,max]\n");
         return -1;
     }
-
-    if(strcmp(argv[1], "calcola-somma") == 0){
-        float a = atof(argv[2]);
-        float b = atof(argv[3]);
-        float risultato = calcolaSomma(a, b);
-        if(risultato >= 0)
-            printf("Somma = %.2f\n", risultato);
+    else if(strcmp(argv[1],"calcola-somma")==0) {
+        //printf("DEBUG: Chiamando calcolaSomma\n");
+        float risultato = calcolaSomma(atof(argv[2]), atof(argv[3]));
+        //printf("DEBUG: calcolaSomma ritornata con: %f\n", risultato);
+        
+        if (risultato != -1) {
+            printf("Risultato: %f\n", risultato);
+        } else {
+            printf("ERRORE: Operazione fallita\n");
+        }
     }
-    else if(strcmp(argv[1], "numeri-primi") == 0){
-        int a = atoi(argv[2]);
-        int b = atoi(argv[3]);
-        int count = primeNumber(a, b);
-        if(count == 0)
-            printf("non ne ho trovati\n");
+    else if(strcmp(argv[1],"numeri-primi")==0) {
+        //printf("DEBUG: Chiamando numeriPrimi\n");
+        int risultato = numeriPrimi(atof(argv[2]), atof(argv[3]));
+        //printf("DEBUG: numeriPrimi ritornata con: %d\n", risultato);
+        
+        if (risultato != -1) {
+            printf("Numeri Primi nell'intervallo [%.0f,%.0f] sono: %d\n", 
+                   atof(argv[2]), atof(argv[3]), risultato);
+        } else {
+            printf("ERRORE: Operazione fallita\n");
+        }
     }
     else {
-        printf("Funzione sconosciuta: %s\n", argv[1]);
+        printf("ERRORE: Funzione '%s' non riconosciuta\n", argv[1]);
+        printf("Funzioni disponibili:\n");
+        printf("  calcola-somma <val1> <val2>  - Calcola la somma di due numeri\n");
+        printf("  numeri-primi <min> <max>     - Conta i numeri primi nell'intervallo [min,max]\n");
         return -1;
     }
-
+    
     return 0;
 }
