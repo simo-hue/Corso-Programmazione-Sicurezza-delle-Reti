@@ -1,3 +1,20 @@
+/*
+
+    LANCIARE 3 SERVER: 
+                        - ./srv 8000
+                        - ./srv 8001
+                        - ./srv 8002
+
+    Fare partire il client in JAVA
+
+
+    su WIRESHARK:
+                  - http.request.method == "GET" && tcp.port == 8000 -> Solo richiesta
+                  - http && tcp.port == 8000 -> vedere anche la risposta
+
+*/
+
+
 #include "network.h"
 #include <stdlib.h>
 #include <string.h>
@@ -19,7 +36,6 @@ int isPrime(int n) {
     return 1;
 }
 
-// Versione corretta che conta TUTTI i primi nell'intervallo
 int trovaNumeroPrimi(int min, int max, int *lista_primi, int max_size) {
     int count = 0;
     int saved = 0;
@@ -60,7 +76,6 @@ int extractIntFromJSON(char* json, char* key) {
 }
 
 int main(int argc, char *argv[]) {
-    // Fix gestione argomenti
     int porta = 8000;  // porta default
     if (argc > 1) {
         porta = atoi(argv[1]);
@@ -123,7 +138,7 @@ int main(int argc, char *argv[]) {
             body[i] = '\0';
         }
 
-        // Gestisci le richieste
+        // Servizio numeri-primi
         if(strstr(url, "numeri-primi")!=NULL)  {
             int min, max, count;
             // Buffer più grande per evitare overflow
@@ -170,7 +185,10 @@ int main(int argc, char *argv[]) {
             }
             fprintf(connfd, "]\r\n}\r\n");
             
-        } else if(strstr(url, "calcola-somma")!=NULL) {
+        } 
+        
+        // Servizio calcola-somma
+        else if(strstr(url, "calcola-somma")!=NULL) {
             float val1, val2, somma;
             
             printf("[SERVER] Richiesta calcola-somma ricevuta\n");
@@ -201,7 +219,10 @@ int main(int argc, char *argv[]) {
             fprintf(connfd,"Connection: close\r\n\r\n");
             fprintf(connfd,"{\r\n  \"somma\":%f\r\n}\r\n", somma);
             
-        } else {
+        } 
+        
+        // Servizio non riconosciuto
+        else {
             fprintf(connfd,"HTTP/1.1 404 Not Found\r\n");
             fprintf(connfd,"Content-Type: application/json\r\n");
             fprintf(connfd,"Connection: close\r\n\r\n");

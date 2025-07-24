@@ -37,6 +37,8 @@ int main(){
     }
     
     while(true) { // una volta risposto chiudo la connessione ma rimango in ascolto per nuove connessioni
+        printf("[SERVER] Server HTTP avviato sulla porta 8000 --> http://localhost:8000/\n");
+
         connfd = acceptConnectionFD(sockfd);
         
         // Ricevo e stampo la richiesta:

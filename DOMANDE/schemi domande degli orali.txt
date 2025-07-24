@@ -1,35 +1,35 @@
 ho cercato di segnarmi tutte le domande che ho trovato e le domande a cui si può collegare il prof dopo:
 
 ESERCIZI WEB CHAT 
-- cos'è websocket e cosa permette di fare
-- cosa fa un protocol upgrade
-- quale funzione di websocket non si può fare con http
-- a che livello opera websocket
+- cos'è websocket e cosa permette di fare -> canale SIMMETRICO e BIDIREZIONALE ( HTTP non poteva )
+- cosa fa un protocol upgrade -> Ci fa smettere di parlare in HTTP ed iniziamo a mandare messaggi secondo un altro protocollo
+- quale funzione di websocket non si può fare con http -> il PUSH DEL SERVER VERSO CLIENT ( visto che in HTTP srv risponde SOLO alle richieste del client )
+- a che livello opera websocket -> PROTOCOLLO DI LVL APPLICATIVO
 
-ANALISI DI RETE CON WIRESHARK
-- perché usare sudo?
+ANALISI DI RETE CON WIRESHARK -> Ricordarsi di impostare la LOOPBACK come interfaccia di rete
+- perché usare sudo? -> Servono i permessi di ROOT per accedere ai lvl di rete
 
 CHE SICUREZZA USA LA CHAT WEB 
-- evoluzione da http a https
-- proprietà del TLS 
+- evoluzione da http a https -> Aggiungo uno strato TLS/SSL dove c'è autenticazione + instaurazione di una chiave di sessione
+- proprietà del TLS -> crittografia, autenticazione e integrità dei dati
 
 ESERCIZI SU WEBSERVICE 
 - microservizi
 
-COME RENDERE PIÙ SICURA LA CHAT WEBSOCKET
-- e se fosse stata fatta in Java/c invece di ha
+COME RENDERE PIÙ SICURA LA CHAT WEBSOCKET -> se avevo HTTPS allora NON serve fare nulla perche è già sicura
+- e se fosse stata fatta in Java/c invece
 
-DIFFERENZA ESERCIZI SOMMATRICE UDP E TCO
+DIFFERENZA ESERCIZI SOMMATRICE UDP E TCP
 - soa
 - rest
 
 ESERCIZI SU PROTOCOLLI TCP/UDP
 - cos'è il socket 
-- su che criterio si sceglie il protocollo 
+- su che criterio si sceglie il protocollo -> Velocità / affidabilità che mi serve...Posso tollerare una perdita?
 - confronto tra Pub/Sub e Client/Server
 - vantaggi, svantaggi e perché usare Pub/Sub
 - come si farebbe un'app di domotica con Pub/Sub
-- vulnerabilità nel Pub/Sub
+- vulnerabilità nel Pub/Sub -> Se non cifro il messaggio ho una vulnerabilità quando il msg è nel BROKER
 
 PARALLELIZZAZIONE WEBSERVICE 
 - stub e skeleton 
@@ -52,10 +52,10 @@ SCARICAMENTO FILE DA BROWSER
 - a cosa serve "follow TCP stream"
 
 CHAT PUB/SUB
-- come è fatta e che protocollo usa
+- come è fatta e che protocollo usa -> MQTT ( che è quello più semplice ) 
 - affidabilità 
-- perché usare QoS se c'è già TCP
-- cifratura asimmetrica 
+- perché usare QoS se c'è già TCP ( TCP è sulla singola tratta e NON end-to-end )
+- cifratura asimmetrica -> Chiave PUBBLICA e PRIVATA, molto onerosa e non mi richiede un entità terza...Algoritmi: MD5 e SHA
 
 COS'È AUTENTICAZIONE
 - tipi e tecniche di autenticazione

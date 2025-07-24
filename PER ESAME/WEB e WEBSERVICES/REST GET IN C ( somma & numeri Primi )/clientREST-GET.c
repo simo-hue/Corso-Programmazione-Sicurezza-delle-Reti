@@ -1,13 +1,11 @@
 /*
-    Client REST-GET compatibile con il server aggiornato
-    
     Supporta entrambi i formati:
     - ./client-get calcola-somma 10 30
     - ./client-get numeri-primi 1 30
     
     Il server risponde con JSON nel formato:
     Somma: {"somma": 40.0}
-    Primi (legacy): {"count":8, "intervallo":"[2,20]", "primi":[2,3,5,7,11,13,17,19]}
+    Primi : {"count":8, "intervallo":"[2,20]", "primi":[2,3,5,7,11,13,17,19]}
 */
 #include "network.h"
 #include <stdio.h>

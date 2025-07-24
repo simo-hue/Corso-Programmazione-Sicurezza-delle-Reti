@@ -264,6 +264,7 @@ int main() {
                 printf("[SERVER] Errore: parametri mancanti\n");
             }
         }
+        
         // Servizio calcolo numeri primi (supporta sia /calcola-primi che /numeri-primi)
         else if(strstr(url, "calcola-primi") != NULL || strstr(url, "numeri-primi") != NULL) {
             printf("[SERVER] Chiamata al servizio numeri primi\n");
@@ -314,6 +315,7 @@ int main() {
                 printf("[SERVER] Errore: parametri non validi\n");
             }
         }
+        
         // Servizio non riconosciuto
         else {
             fprintf(connfd, "HTTP/1.1 404 Not Found\r\n\r\n{\r\n    \"errore\": \"Servizio non riconosciuto!\"\r\n}\r\n");
