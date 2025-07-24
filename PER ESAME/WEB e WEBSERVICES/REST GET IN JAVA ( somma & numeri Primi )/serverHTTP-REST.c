@@ -32,6 +32,8 @@ int main(void){
     socketif_t sockfd = createTCPServer(8000);
     if(sockfd < 0){ fprintf(stderr,"[SERVER] Errore socket %d\n",sockfd); return 1; }
     printf("[SERVER] In ascolto porta 8000…\n");
+    printf("         - GET /calcola-somma\n");
+    printf("         - GET /numeri-primi\n\n");
 
     for(;;){
         FILE *connfd = acceptConnectionFD(sockfd);

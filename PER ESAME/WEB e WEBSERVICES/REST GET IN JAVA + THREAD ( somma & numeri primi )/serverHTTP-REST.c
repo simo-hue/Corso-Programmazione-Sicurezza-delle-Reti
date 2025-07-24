@@ -54,7 +54,8 @@ int extractIntFromJSON(char* json, char* key) {
 }
 
 int main(int argc, char *argv[]) {
-    int porta = 8000;
+    printf("%s", argv[1]);
+    int porta = atoi(argv[1]);
     if (argc > 1)
         porta = atoi(argv[1]);
 

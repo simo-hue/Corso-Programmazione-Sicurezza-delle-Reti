@@ -176,8 +176,8 @@ int main() {
     
     printf("[SERVER] Server HTTP avviato sulla porta 8000\n");
     printf("[SERVER] Servizi disponibili:\n");
-    printf("         - GET /calcola-somma?op1=X&op2=Y (o param1/param2)\n");
-    printf("         - GET /numeri-primi?min=X&max=Y (formato legacy)\n\n");
+    printf("         - GET /calcola-somma\n");
+    printf("         - GET /numeri-primi\n\n");
     
     // Loop principale del server
     while(true) {
