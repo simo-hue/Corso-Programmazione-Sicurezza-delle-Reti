@@ -2,7 +2,11 @@
 
     Noto che NON ci sono i parametri nell'URL a differenza del GET e sono nel corpo della richiesta -> NON ho limiti di lunghezza
 
-    Se utilizzo HTTP sono comunque in CHIARO ( quindi NON sicuri ) -> TCP mi assicura l'ordine e l'integrità dei dati ( AFFIDABILITÀ ), ma non la loro riservatezza ( SICUREZZA )
+    Se utilizzo HTTP sono comunque in CHIARO ( quindi NON sicuri ) 
+                     |
+                    TCP 
+                     |
+    mi assicura l'ordine e l'integrità dei dati ( AFFIDABILITÀ ), ma non la loro riservatezza ( SICUREZZA )
 
     Tramite Wireshark, applico il filtro: http.request.method == "POST" && tcp.port == 8000 e li posso vedere 
 -->

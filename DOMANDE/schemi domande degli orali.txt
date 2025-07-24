@@ -1,0 +1,91 @@
+ho cercato di segnarmi tutte le domande che ho trovato e le domande a cui si può collegare il prof dopo:
+
+ESERCIZI WEB CHAT 
+- cos'è websocket e cosa permette di fare
+- cosa fa un protocol upgrade
+- quale funzione di websocket non si può fare con http
+- a che livello opera websocket
+
+ANALISI DI RETE CON WIRESHARK
+- perché usare sudo?
+
+CHE SICUREZZA USA LA CHAT WEB 
+- evoluzione da http a https
+- proprietà del TLS 
+
+ESERCIZI SU WEBSERVICE 
+- microservizi
+
+COME RENDERE PIÙ SICURA LA CHAT WEBSOCKET
+- e se fosse stata fatta in Java/c invece di ha
+
+DIFFERENZA ESERCIZI SOMMATRICE UDP E TCO
+- soa
+- rest
+
+ESERCIZI SU PROTOCOLLI TCP/UDP
+- cos'è il socket 
+- su che criterio si sceglie il protocollo 
+- confronto tra Pub/Sub e Client/Server
+- vantaggi, svantaggi e perché usare Pub/Sub
+- come si farebbe un'app di domotica con Pub/Sub
+- vulnerabilità nel Pub/Sub
+
+PARALLELIZZAZIONE WEBSERVICE 
+- stub e skeleton 
+- vantaggi microservizi e collo di bottiglia 
+- spreco di risorse e discorso economico 
+
+CHAT WEBSOCKET
+- come è fatta lato client  e lato server
+- perché in js e non in Java/C
+- cifratura simmetrica
+
+WIRESHARK E STRUMENTI PIÙ SEMPLICI 
+- nslookup, whois, ping...
+- cos'è RTT
+- ping:che tipo di traffico 
+
+SCARICAMENTO FILE DA BROWSER
+- che protocollo usa
+- se apro wireshark cosa vedo
+- a cosa serve "follow TCP stream"
+
+CHAT PUB/SUB
+- come è fatta e che protocollo usa
+- affidabilità 
+- perché usare QoS se c'è già TCP
+- cifratura asimmetrica 
+
+COS'È AUTENTICAZIONE
+- tipi e tecniche di autenticazione
+
+CERTIFICATI CA
+- come è composto 
+- come si ottiene
+- chi genera le chiavi e dove finiscono
+- perché fidarsi degli enti di certificazione
+
+
+
+------------------
+
+
+
+
+1)Esercizio sull’upload dei file
+
+2)Firewall - IDS
+
+3)E una domanda generica su websocket
+
+
+
+------------------
+
+
+
+- Esercizio sulle SOA, far vedere e spiegare perché (e come funziona a grandi linee) il codice relativo al calcolo dei numeri primi da 1 a 1000000;
+- differenze tra sistema client/server e PUB/SUB;
+- vulnerabilità PUB/SUB;
+- vulnerabilità che distingue il modello PUB/SUB rispetto all’integrità dei dati e al TLS (boh😂)

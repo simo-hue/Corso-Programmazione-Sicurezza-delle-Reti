@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2 id="demo"></h2>
+
+<!--
+      setInterval() è un EVENTO ASINCRONO visto che sono io che stabilisco quando accadrà e quindi lo SO !
+-->
+<script>
+setInterval(displayHello, 1000);
+
+function displayHello() {
+  document.getElementById("demo").innerHTML += "L'esame STA andandno BENISSIMO.   ";
+}
+</script>
+
+</body>
+</html>
