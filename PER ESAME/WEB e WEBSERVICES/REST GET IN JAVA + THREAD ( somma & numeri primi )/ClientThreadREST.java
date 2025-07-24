@@ -1,3 +1,18 @@
+/*
+
+    SU WIRESHARK applico questo filtro: http.request.method == "GET" && tcp.port == 8000
+
+    Posso lanciare:
+        - java ClientREST numeri-primi 0 30
+        - java ClientREST calcola-somma 10 30
+
+
+    time java ClientThreadREST numeri-primi 1 100000000  -> 5.497 total
+            rispetto a 
+    time java ClientREST numeri-primi 1 100000000 -> 55.552 total
+    
+*/
+
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;

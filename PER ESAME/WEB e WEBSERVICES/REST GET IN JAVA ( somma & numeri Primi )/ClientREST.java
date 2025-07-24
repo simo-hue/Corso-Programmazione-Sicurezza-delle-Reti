@@ -6,6 +6,11 @@
         - java ClientREST numeri-primi 0 30
         - java ClientREST calcola-somma 10 30
 
+
+    time java ClientREST numeri-primi 1 100000000 -> 55.552 total
+            rispetto a 
+    time java ClientThreadREST numeri-primi 1 100000000  -> 5.497 total
+    
 */
 
 import java.io.BufferedReader;

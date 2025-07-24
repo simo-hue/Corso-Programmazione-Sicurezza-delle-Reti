@@ -19,14 +19,20 @@ int isPrime(int n) {
     return 1;
 }
 
+// Versione corretta che conta TUTTI i primi nell'intervallo
 int trovaNumeroPrimi(int min, int max, int *lista_primi, int max_size) {
     int count = 0;
-    for (int i = min; i <= max && count < max_size; i++) {
+    int saved = 0;
+    
+    for (int i = min; i <= max; i++) {
         if (isPrime(i)) {
-            lista_primi[count++] = i;
+            count++;  // Conta sempre
+            if (saved < max_size) {  // Salva solo se c'è spazio
+                lista_primi[saved++] = i;
+            }
         }
     }
-    return count;
+    return count;  // Ritorna il conteggio totale, non solo quelli salvati
 }
 
 float extractFloatFromJSON(char* json, char* key) {
@@ -54,10 +60,14 @@ int extractIntFromJSON(char* json, char* key) {
 }
 
 int main(int argc, char *argv[]) {
-    printf("%s", argv[1]);
-    int porta = atoi(argv[1]);
-    if (argc > 1)
+    // Fix gestione argomenti
+    int porta = 8000;  // porta default
+    if (argc > 1) {
         porta = atoi(argv[1]);
+        printf("[SERVER] Avvio sulla porta %d\n", porta);
+    } else {
+        printf("[SERVER] Nessuna porta specificata, uso porta default %d\n", porta);
+    }
 
     socketif_t sockfd;
     FILE* connfd;
@@ -78,32 +88,48 @@ int main(int argc, char *argv[]) {
 
     while(true) {
         connfd = acceptConnectionFD(sockfd);
+        if (connfd == NULL) {
+            printf("[SERVER] Errore nell'accettare connessione\n");
+            continue;
+        }
 
-        fgets(request, sizeof(request), connfd);
+        // Leggi la richiesta HTTP
+        if (fgets(request, sizeof(request), connfd) == NULL) {
+            fclose(connfd);
+            continue;
+        }
+        
         strcpy(method, strtok(request, " "));
         strcpy(url, strtok(NULL, " "));
 
         length = 0;
         memset(body, 0, sizeof(body));
 
+        // Leggi gli header HTTP
         while(request[0]!='\r') {
-            fgets(request, sizeof(request), connfd);
+            if (fgets(request, sizeof(request), connfd) == NULL) break;
             if(strstr(request, "Content-Length:")!=NULL)  {
                 length = atol(request+15);
             }
         }
 
+        // Leggi il body se presente
         if(strcmp(method, "POST")==0 && length > 0)  {
             for(i=0; i<length && i<MTU-1; i++)  {
                 c = fgetc(connfd);
+                if (c == EOF) break;
                 body[i] = c;
             }
             body[i] = '\0';
         }
 
+        // Gestisci le richieste
         if(strstr(url, "numeri-primi")!=NULL)  {
             int min, max, count;
-            int lista_primi[1000];
+            // Buffer più grande per evitare overflow
+            int lista_primi[10000];  // Aumentato da 1000 a 10000
+
+            printf("[SERVER] Richiesta numeri-primi ricevuta\n");
 
             if(strcmp(method, "GET")==0) {
                 char *function, *param1, *param2;
@@ -111,45 +137,78 @@ int main(int argc, char *argv[]) {
                 param1 = strtok(NULL, "?&");
                 param2 = strtok(NULL, "?&");
 
-                strtok(param1,"=");
-                min = atoi(strtok(NULL,"="));
-                strtok(param2,"=");
-                max = atoi(strtok(NULL,"="));
+                if (param1 && param2) {
+                    strtok(param1,"=");
+                    min = atoi(strtok(NULL,"="));
+                    strtok(param2,"=");
+                    max = atoi(strtok(NULL,"="));
+                } else {
+                    min = 1; max = 100;  // valori default
+                }
             } else {
                 min = extractIntFromJSON(body, "min");
                 max = extractIntFromJSON(body, "max");
             }
 
-            count = trovaNumeroPrimi(min, max, lista_primi, 1000);
+            printf("[SERVER] Calcolo primi nell'intervallo [%d, %d]\n", min, max);
 
-            fprintf(connfd,"HTTP/1.1 200 OK\r\n\r\n{\r\n  \"count\":%d,\r\n  \"intervallo\":\"[%d,%d]\",\r\n  \"primi\":[", count, min, max);
-            for(int j = 0; j < count; j++) {
+            count = trovaNumeroPrimi(min, max, lista_primi, 10000);
+
+            printf("[SERVER] Trovati %d numeri primi\n", count);
+
+            // Invia risposta JSON
+            fprintf(connfd,"HTTP/1.1 200 OK\r\n");
+            fprintf(connfd,"Content-Type: application/json\r\n");
+            fprintf(connfd,"Connection: close\r\n\r\n");
+            fprintf(connfd,"{\r\n  \"count\":%d,\r\n  \"intervallo\":\"[%d,%d]\",\r\n  \"primi\":[", count, min, max);
+            
+            // Invia solo i primi che sono stati salvati nell'array (massimo 10000)
+            int to_send = (count < 10000) ? count : 10000;
+            for(int j = 0; j < to_send; j++) {
                 if(j > 0) fprintf(connfd, ",");
                 fprintf(connfd, "%d", lista_primi[j]);
             }
             fprintf(connfd, "]\r\n}\r\n");
+            
         } else if(strstr(url, "calcola-somma")!=NULL) {
             float val1, val2, somma;
+            
+            printf("[SERVER] Richiesta calcola-somma ricevuta\n");
+            
             if(strcmp(method, "GET")==0) {
                 char *function, *op1, *op2;
                 function = strtok(url, "?&");
                 op1 = strtok(NULL, "?&");
                 op2 = strtok(NULL, "?&");
-                strtok(op1,"=");
-                val1 = atof(strtok(NULL,"="));
-                strtok(op2,"=");
-                val2 = atof(strtok(NULL,"="));
+                
+                if (op1 && op2) {
+                    strtok(op1,"=");
+                    val1 = atof(strtok(NULL,"="));
+                    strtok(op2,"=");
+                    val2 = atof(strtok(NULL,"="));
+                } else {
+                    val1 = 0; val2 = 0;
+                }
             } else {
                 val1 = extractFloatFromJSON(body, "param1");
                 val2 = extractFloatFromJSON(body, "param2");
             }
 
             somma = calcolaSomma(val1, val2);
-            fprintf(connfd,"HTTP/1.1 200 OK\r\n\r\n{\r\n  \"somma\":%f\r\n}\r\n", somma);
+            
+            fprintf(connfd,"HTTP/1.1 200 OK\r\n");
+            fprintf(connfd,"Content-Type: application/json\r\n");
+            fprintf(connfd,"Connection: close\r\n\r\n");
+            fprintf(connfd,"{\r\n  \"somma\":%f\r\n}\r\n", somma);
+            
         } else {
-            fprintf(connfd,"HTTP/1.1 404 Not Found\r\n\r\n{\r\n  \"errore\":\"Funzione non riconosciuta!\",\r\n  \"servizi_disponibili\":[\"calcola-somma\", \"numeri-primi\"]\r\n}\r\n");
+            fprintf(connfd,"HTTP/1.1 404 Not Found\r\n");
+            fprintf(connfd,"Content-Type: application/json\r\n");
+            fprintf(connfd,"Connection: close\r\n\r\n");
+            fprintf(connfd,"{\r\n  \"errore\":\"Funzione non riconosciuta!\",\r\n  \"servizi_disponibili\":[\"calcola-somma\", \"numeri-primi\"]\r\n}\r\n");
         }
 
+        fflush(connfd);  // Assicurati che i dati siano inviati
         fclose(connfd);
     }
 
