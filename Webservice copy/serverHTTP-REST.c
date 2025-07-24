@@ -33,53 +33,6 @@ int isPrime(int n) {
 }
 
 /**
- * Funzione per calcolare i numeri primi in formato legacy (compatibile con client esistente)
- * @param min: limite inferiore dell'intervallo
- * @param max: limite superiore dell'intervallo
- * @param response: buffer per la risposta JSON
- * @param execution_time: tempo di esecuzione in millisecondi
- */
-void calcolaPrimiIntervalloLegacy(int min, int max, char* response, double execution_time) {
-    char temp[1024];
-    int count = 0;
-    int first = 1;
-    
-    // Inizializza la risposta JSON in formato legacy
-    sprintf(response, "{\n\"count\":");
-    
-    // Prima conta i numeri primi
-    for (int i = min; i <= max; i++) {
-        if (isPrime(i)) {
-            count++;
-        }
-    }
-    
-    // Aggiunge il count
-    sprintf(temp, "%d,\n\"intervallo\":\"[%d,%d]\",\n\"primi\":[", count, min, max);
-    strcat(response, temp);
-    
-    // Aggiunge tutti i numeri primi
-    for (int i = min; i <= max; i++) {
-        if (isPrime(i)) {
-            if (!first) {
-                strcat(response, ",");
-            }
-            sprintf(temp, "%d", i);
-            strcat(response, temp);
-            first = 0;
-        }
-    }
-    
-    // Chiude l'array e aggiunge eventualmente il tempo
-    if (execution_time > 0) {
-        sprintf(temp, "],\n\"tempo_esecuzione_ms\":%.2f\n}", execution_time);
-    } else {
-        sprintf(temp, "]\n}");
-    }
-    strcat(response, temp);
-}
-
-/**
  * Funzione per calcolare i numeri primi in un intervallo e costruire la risposta JSON
  * @param min: limite inferiore dell'intervallo
  * @param max: limite superiore dell'intervallo
@@ -176,8 +129,8 @@ int main() {
     
     printf("[SERVER] Server HTTP avviato sulla porta 8000\n");
     printf("[SERVER] Servizi disponibili:\n");
-    printf("         - GET /calcola-somma\n");
-    printf("         - GET /numeri-primi\n\n");
+    printf("         - GET /calcola-somma?op1=X&op2=Y\n");
+    printf("         - GET /numeri-primi?min=X&max=Y\n\n");
     
     // Loop principale del server
     while(true) {
@@ -210,72 +163,42 @@ int main() {
         
         // *** ROUTING DEI SERVIZI ***
         
-        // Servizio calcolo somma (supporta sia op1/op2 che param1/param2)
+        // Servizio calcolo somma (esistente)
         if(strstr(url, "calcola-somma") != NULL) {
             printf("[SERVER] Chiamata al servizio calcola-somma\n");
             
-            char *function, *param1, *param2;
+            char *function, *op1, *op2;
             float somma, val1, val2;
-            char url_copy[MTU];
-            strcpy(url_copy, url);
    
             // Skeleton: decodifica (de-serializzazione) dei parametri
-            function = strtok(url_copy, "?&");
-            param1 = strtok(NULL, "?&");
-            param2 = strtok(NULL, "?&");
+            function = strtok(url, "?&");
+            op1 = strtok(NULL, "?&");
+            op2 = strtok(NULL, "?&");
+            strtok(op1, "=");
+            val1 = atof(strtok(NULL, "="));
+            strtok(op2, "=");
+            val2 = atof(strtok(NULL, "="));
             
-            if (param1 != NULL && param2 != NULL) {
-                // Parsing flessibile per supportare sia op1/op2 che param1/param2
-                char* key1 = strtok(param1, "=");
-                char* value1 = strtok(NULL, "=");
-                char* key2 = strtok(param2, "=");
-                char* value2 = strtok(NULL, "=");
-                
-                if (value1 != NULL && value2 != NULL) {
-                    // Determina quale parametro è quale basandosi sul nome
-                    if ((strcmp(key1, "op1") == 0 || strcmp(key1, "param1") == 0) && 
-                        (strcmp(key2, "op2") == 0 || strcmp(key2, "param2") == 0)) {
-                        val1 = atof(value1);
-                        val2 = atof(value2);
-                    } else if ((strcmp(key1, "op2") == 0 || strcmp(key1, "param2") == 0) && 
-                               (strcmp(key2, "op1") == 0 || strcmp(key2, "param1") == 0)) {
-                        val1 = atof(value2);
-                        val2 = atof(value1);
-                    } else {
-                        fprintf(connfd, "HTTP/1.1 400 Bad Request\r\n\r\n{\r\n    \"errore\": \"Parametri non validi\"\r\n}\r\n");
-                        printf("[SERVER] Errore: parametri non riconosciuti\n");
-                        fclose(connfd);
-                        continue;
-                    }
-                    
-                    // Chiamata alla business logic
-                    somma = calcolaSomma(val1, val2);
-                    
-                    // Skeleton: codifica (serializzazione) del risultato
-                    fprintf(connfd, "HTTP/1.1 200 OK\r\n\r\n{\r\n    \"somma\": %f\r\n}\r\n", somma);
-                    
-                    printf("[SERVER] Somma calcolata: %.2f + %.2f = %.2f\n", val1, val2, somma);
-                } else {
-                    fprintf(connfd, "HTTP/1.1 400 Bad Request\r\n\r\n{\r\n    \"errore\": \"Valori parametri mancanti\"\r\n}\r\n");
-                    printf("[SERVER] Errore: valori parametri mancanti\n");
-                }
-            } else {
-                fprintf(connfd, "HTTP/1.1 400 Bad Request\r\n\r\n{\r\n    \"errore\": \"Parametri mancanti\"\r\n}\r\n");
-                printf("[SERVER] Errore: parametri mancanti\n");
-            }
+            // Chiamata alla business logic
+            somma = calcolaSomma(val1, val2);
+            
+            // Skeleton: codifica (serializzazione) del risultato
+            fprintf(connfd, "HTTP/1.1 200 OK\r\n\r\n{\r\n    \"somma\": %f\r\n}\r\n", somma);
+            
+            printf("[SERVER] Somma calcolata: %.2f + %.2f = %.2f\n", val1, val2, somma);
         }
-        // Servizio calcolo numeri primi (supporta sia /calcola-primi che /numeri-primi)
-        else if(strstr(url, "calcola-primi") != NULL || strstr(url, "numeri-primi") != NULL) {
-            printf("[SERVER] Chiamata al servizio numeri primi\n");
+        // Nuovo servizio calcolo numeri primi
+        else if(strstr(url, "numeri-primi") != NULL) {
+            printf("[SERVER] Chiamata al servizio numeri-primi\n");
             
             int min, max;
-            char response[4096];
-            int is_legacy_format = (strstr(url, "numeri-primi") != NULL);
+            char response[4096]; // Buffer più grande per contenere tutti i numeri primi
             
             // Parsing dei parametri dall'URL
             if (parseParametriPrimi(url, &min, &max)) {
                 // Validazione dei parametri
                 if (min > max) {
+                    // Scambia i valori se min > max
                     int temp = min;
                     min = max;
                     max = temp;
@@ -286,23 +209,14 @@ int main() {
                 // Misurazione del tempo di esecuzione
                 clock_t start_time = clock();
                 
-                if (is_legacy_format) {
-                    // Formato compatibile con il client esistente
-                    calcolaPrimiIntervalloLegacy(min, max, response, 0);
-                } else {
-                    // Nuovo formato esteso
-                    calcolaPrimiIntervallo(min, max, response, 0);
-                }
+                // Chiamata alla business logic per calcolare i primi
+                calcolaPrimiIntervallo(min, max, response, 0); // Tempo calcolato dopo
                 
                 clock_t end_time = clock();
                 double execution_time = ((double)(end_time - start_time) / CLOCKS_PER_SEC) * 1000.0;
                 
                 // Aggiorna la risposta con il tempo reale
-                if (is_legacy_format) {
-                    calcolaPrimiIntervalloLegacy(min, max, response, execution_time);
-                } else {
-                    calcolaPrimiIntervallo(min, max, response, execution_time);
-                }
+                calcolaPrimiIntervallo(min, max, response, execution_time);
                 
                 // Invia la risposta HTTP con il JSON dei risultati
                 fprintf(connfd, "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n%s\r\n", response);
@@ -310,7 +224,7 @@ int main() {
                 printf("[SERVER] Calcolo completato in %.2f ms\n", execution_time);
             } else {
                 // Parametri non validi
-                fprintf(connfd, "HTTP/1.1 400 Bad Request\r\n\r\n{\r\n    \"errore\": \"Parametri non validi. Utilizzare: ?min=X&max=Y\"\r\n}\r\n");
+                fprintf(connfd, "HTTP/1.1 400 Bad Request\r\n\r\n{\r\n    \"errore\": \"Parametri non validi. Utilizzare: /numeri-primi?min=X&max=Y\"\r\n}\r\n");
                 printf("[SERVER] Errore: parametri non validi\n");
             }
         }

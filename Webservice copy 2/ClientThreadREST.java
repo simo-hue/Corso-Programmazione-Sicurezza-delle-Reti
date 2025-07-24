@@ -1,30 +1,46 @@
 import java.io.*; 
 import java.net.*;
 
-class ClientREST 
+class ClientThreadREST
 {    
     public static void main(String args[])
     {
-        RESTAPI service1=new RESTAPI("127.0.0.1");
-
         if(args.length < 3)    {
             System.out.println("USAGE: java ClientREST tipofunzione op1 op2");
         }   
-        else if(args[0].equals("calcola-somma")) {
-            System.out.println("Risultato: " + service1.calcolaSomma(Float.parseFloat(args[1]), Float.parseFloat(args[2])));
+        else  {
+            RESTAPI service1=new RESTAPI("127.0.0.1", args[0], args[1], args[2]);
+            RESTAPI service2=new RESTAPI("127.0.0.1", args[0], args[1], args[2]);
+            RESTAPI service3=new RESTAPI("127.0.0.1", args[0], args[1], args[2]);
+            service1.start();
+            service2.start();
+            service3.start();
         }
     }
 }
 
-class RESTAPI
+class RESTAPI extends Thread
 {
-    String server;
+    String server, service, param1, param2;
 
-    RESTAPI(String remoteServer)  {
-        server = new String(remoteServer);
+    public void run()   {
+        if(service.equals("calcola-somma"))    {
+            System.out.println("Risultato: " + calcolaSomma(Float.parseFloat(param1), Float.parseFloat(param2)));
+        }
+        else    {
+            System.out.println("Servizio non disponibile!");
+        }
+
     }
 
-    float calcolaSomma(float val1, float val2)  {
+    RESTAPI(String remoteServer, String srvc, String p1, String p2)  {
+        server = new String(remoteServer);
+        service = new String(srvc);
+        param1 = new String(p1);
+        param2 = new String(p2);
+    }
+
+    synchronized float calcolaSomma(float val1, float val2)  {
 
         URL u = null;
         float risultato=0;

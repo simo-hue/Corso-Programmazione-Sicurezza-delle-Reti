@@ -1,102 +1,155 @@
-// Ora l'endpoint /numeri-primi restituisce **anche** l'elenco dei numeri primi trovati:
-//    { "totale_numeri_primi": N, "primi": [2,3,5,...] }
-
 #include "network.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdbool.h>
 
-/***************** BUSINESS LOGIC *****************/
-/* Funzione utilitaria: prova di primalità */
-static bool is_prime(int n){
-    if(n < 2) return false;
-    for(int j = 2; j*j <= n; ++j)
-        if(n % j == 0) return false;
-    return true;
+float calcolaSomma(float val1, float val2)  {
+   return (val1 + val2);
 }
 
-/***************** HELPER HTTP *****************/
-static void send_json(FILE *stream, int status_code, const char *body){
-    const char *status_text =
-        (status_code == 200 ? "OK" : (status_code == 404 ? "Not Found" : "Bad Request"));
-    int len = (int)strlen(body);
-    fprintf(stream,
-            "HTTP/1.1 %d %s\r\n"
-            "Content-Type: application/json\r\n"
-            "Content-Length: %d\r\n"
-            "\r\n"
-            "%s",
-            status_code, status_text, len, body);
+int isPrime(int n) {
+    if (n <= 1) return 0;
+    if (n <= 3) return 1;
+    if (n % 2 == 0 || n % 3 == 0) return 0;
+    for (int i = 5; i * i <= n; i += 6) {
+        if (n % i == 0 || n % (i + 2) == 0)
+            return 0;
+    }
+    return 1;
 }
 
-static void discard_body(FILE *stream, long length){
-    for(long i = 0; i < length; ++i) fgetc(stream);
-}
-
-/***************** MAIN *****************/
-int main(void){
-    socketif_t sockfd = createTCPServer(8000);
-    if(sockfd < 0){ fprintf(stderr,"[SERVER] Errore socket %d\n",sockfd); return 1; }
-    printf("[SERVER] In ascolto porta 8000…\n");
-
-    for(;;){
-        FILE *connfd = acceptConnectionFD(sockfd);
-        if(!connfd) continue;
-
-        char line[MTU] = {0};
-        char method[8] = {0};
-        char url[MTU]  = {0};
-
-        /* ---- request‑line ---- */
-        if(!fgets(line,sizeof(line),connfd)){ fclose(connfd); continue; }
-        sscanf(line, "%7s %511s", method, url);
-
-        /* ---- header ---- */
-        long cl = 0;
-        while(fgets(line,sizeof(line),connfd)){
-            if(strcmp(line,"\r\n")==0) break;
-            if(strncmp(line,"Content-Length:",15)==0) cl = atol(line+15);
+int trovaNumeroPrimi(int min, int max, int *lista_primi, int max_size) {
+    int count = 0;
+    for (int i = min; i <= max && count < max_size; i++) {
+        if (isPrime(i)) {
+            lista_primi[count++] = i;
         }
-        if(strcmp(method,"POST")==0||strcmp(method,"PUT")==0) discard_body(connfd,cl);
+    }
+    return count;
+}
 
-        /* ---- routing ---- */
-        if(strstr(url,"calcola-somma")){
-            float a=0,b=0;
-            if(sscanf(url,"%*[^?]?param1=%f&param2=%f",&a,&b)!=2){
-                send_json(connfd,400,"{ \"errore\": \"Parametri mancanti o malformati\" }\n");
-            }else{
-                char body[128];
-                snprintf(body,sizeof(body),"{ \"somma\": %.2f }\n",a+b);
-                send_json(connfd,200,body);
+float extractFloatFromJSON(char* json, char* key) {
+    char search_key[100];
+    sprintf(search_key, "\"%s\":", key);
+    char* pos = strstr(json, search_key);
+    if (pos != NULL) {
+        pos += strlen(search_key);
+        while (*pos == ' ' || *pos == '\t') pos++;
+        return atof(pos);
+    }
+    return 0.0;
+}
+
+int extractIntFromJSON(char* json, char* key) {
+    char search_key[100];
+    sprintf(search_key, "\"%s\":", key);
+    char* pos = strstr(json, search_key);
+    if (pos != NULL) {
+        pos += strlen(search_key);
+        while (*pos == ' ' || *pos == '\t') pos++;
+        return atoi(pos);
+    }
+    return 0;
+}
+
+int main(int argc, char *argv[]) {
+    int porta = 8000;
+    if (argc > 1)
+        porta = atoi(argv[1]);
+
+    socketif_t sockfd;
+    FILE* connfd;
+    int res, i;
+    long length=0;
+    char request[MTU], url[MTU], method[10], c;
+    char body[MTU];
+
+    sockfd = createTCPServer(porta);
+    if (sockfd < 0){
+        printf("[SERVER] Errore: %i\n", sockfd);
+        return -1;
+    }
+
+    printf("[SERVER] Server avviato sulla porta %d\n", porta);
+    printf("  - GET/POST /calcola-somma\n");
+    printf("  - GET/POST /numeri-primi\n\n");
+
+    while(true) {
+        connfd = acceptConnectionFD(sockfd);
+
+        fgets(request, sizeof(request), connfd);
+        strcpy(method, strtok(request, " "));
+        strcpy(url, strtok(NULL, " "));
+
+        length = 0;
+        memset(body, 0, sizeof(body));
+
+        while(request[0]!='\r') {
+            fgets(request, sizeof(request), connfd);
+            if(strstr(request, "Content-Length:")!=NULL)  {
+                length = atol(request+15);
             }
         }
-        else if(strstr(url,"numeri-primi")){
-            int a=0,b=0;
-            if(sscanf(url,"%*[^?]?param1=%d&param2=%d",&a,&b)!=2||a>b){
-                send_json(connfd,400,"{ \"errore\": \"Intervallo non valido\" }\n");
-            }else{
-                /* costruiamo l'array JSON dei primi */
-                char primiBuf[MTU]="";      // contenitore numeri separati da virgola
-                int  counter=0;
-                char tmp[16];
-                for(int i=a;i<=b;++i){
-                    if(is_prime(i)){
-                        if(counter>0) strncat(primiBuf,",",sizeof(primiBuf)-strlen(primiBuf)-1);
-                        snprintf(tmp,sizeof(tmp),"%d",i);
-                        strncat(primiBuf,tmp,sizeof(primiBuf)-strlen(primiBuf)-1);
-                        ++counter;
-                    }
-                }
-                char body[MTU*2];
-                snprintf(body,sizeof(body),
-                         "{ \"totale_numeri_primi\": %d, \"primi\": [%s] }\n",
-                         counter, primiBuf);
-                send_json(connfd,200,body);
+
+        if(strcmp(method, "POST")==0 && length > 0)  {
+            for(i=0; i<length && i<MTU-1; i++)  {
+                c = fgetc(connfd);
+                body[i] = c;
             }
+            body[i] = '\0';
         }
-        else{
-            send_json(connfd,404,"{ \"errore\": \"Funzione non riconosciuta\" }\n");
+
+        if(strstr(url, "numeri-primi")!=NULL)  {
+            int min, max, count;
+            int lista_primi[1000];
+
+            if(strcmp(method, "GET")==0) {
+                char *function, *param1, *param2;
+                function = strtok(url, "?&");
+                param1 = strtok(NULL, "?&");
+                param2 = strtok(NULL, "?&");
+
+                strtok(param1,"=");
+                min = atoi(strtok(NULL,"="));
+                strtok(param2,"=");
+                max = atoi(strtok(NULL,"="));
+            } else {
+                min = extractIntFromJSON(body, "min");
+                max = extractIntFromJSON(body, "max");
+            }
+
+            count = trovaNumeroPrimi(min, max, lista_primi, 1000);
+
+            fprintf(connfd,"HTTP/1.1 200 OK\r\n\r\n{\r\n  \"count\":%d,\r\n  \"intervallo\":\"[%d,%d]\",\r\n  \"primi\":[", count, min, max);
+            for(int j = 0; j < count; j++) {
+                if(j > 0) fprintf(connfd, ",");
+                fprintf(connfd, "%d", lista_primi[j]);
+            }
+            fprintf(connfd, "]\r\n}\r\n");
+        } else if(strstr(url, "calcola-somma")!=NULL) {
+            float val1, val2, somma;
+            if(strcmp(method, "GET")==0) {
+                char *function, *op1, *op2;
+                function = strtok(url, "?&");
+                op1 = strtok(NULL, "?&");
+                op2 = strtok(NULL, "?&");
+                strtok(op1,"=");
+                val1 = atof(strtok(NULL,"="));
+                strtok(op2,"=");
+                val2 = atof(strtok(NULL,"="));
+            } else {
+                val1 = extractFloatFromJSON(body, "param1");
+                val2 = extractFloatFromJSON(body, "param2");
+            }
+
+            somma = calcolaSomma(val1, val2);
+            fprintf(connfd,"HTTP/1.1 200 OK\r\n\r\n{\r\n  \"somma\":%f\r\n}\r\n", somma);
+        } else {
+            fprintf(connfd,"HTTP/1.1 404 Not Found\r\n\r\n{\r\n  \"errore\":\"Funzione non riconosciuta!\",\r\n  \"servizi_disponibili\":[\"calcola-somma\", \"numeri-primi\"]\r\n}\r\n");
         }
 
         fclose(connfd);
-        printf("[SERVER] Connessione terminata.\n\n");
     }
 
     closeConnection(sockfd);
