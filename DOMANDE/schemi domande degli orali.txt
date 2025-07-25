@@ -221,12 +221,11 @@ WEB SOCKET CHAT:
 
 PROGRAMMA NUMERI PRIMI ( REST ):
 - Eseguire test, spiegare come funziona e che strategie vengono utilizzate
-- come fa a 
-- 
-- 
-- 
-- 
-- 
+- Qual'è la funzione di ogni THREAD? -> Dividere la chiamata in pezzettini più piccoli ( ma sono comunque i server che fanno fatica )
+- Livello di TRASPORTO cosa succede? -> C'è una connessione TCP all'interno della quale scorre "linguaggio HTTP"
+- come faccio a capire che l'intestazione è finita? -> Doppio a capo
+- Guardiamo nel codice del server, cerchiamo dove si legge il corpo della risposta
+- quali sono le fragilità di questa applicazione? Cosa mi garantisce la HTTPS -> Riservatezza, integrità ed autenticazione
 - 
 - 
 - 
