@@ -111,10 +111,12 @@ CHAT WEB SOCKET:
 - che tipo di programmazione è -> tipo reattivo rispetto a batch
 - Come viene fatta l'autenticazione -
 - che tipo di autenticazione remota esiste -> Diretta ed INDIRETTA
+- Spiegare il meccanismo di autenticazione remota indiretta
 
 
 
 ------------------
+
 
 
 UPLOAD SU SERVER / SCAMBIO FILE TRA CLIENT E SERVER:
@@ -123,3 +125,18 @@ UPLOAD SU SERVER / SCAMBIO FILE TRA CLIENT E SERVER:
 - Aprire wireshark per analizzare il traffico di rete 
 - Che filtro posso applicare? E perchè ?
 - Come posso vedere tutta la connessione e non pacchetto per pacchetto? -> FUNZIONALITÀ di FOLLOW TCP STREAM
+- perchè ci sono 2 colori diversi quando faccio FOLLOW TCP STREAM -> Rappresentazione della direzione del traffico
+- Perchè sono così tanti questi pacchetti? Devono passare tutti un BYTE alla volta
+- Questa applicazione è sicura? NO, TCP è affidabile ma NON sicuro
+- Come rendere sicura questa connessione? Devo aggiungere il layer di TLS/SSL e così ho garantito la sicurezza
+- Quali sono le proprietà della sicurezza? -> integrità, segretezza, autenticità, disponibilità, tracciabilità
+- Che cosa vuol dire avere un applicazione sicura? ->
+
+------------------
+
+
+
+
+
+
+------------------
