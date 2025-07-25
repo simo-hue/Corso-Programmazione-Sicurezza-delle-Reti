@@ -119,7 +119,7 @@ CHAT WEB SOCKET:
 
 
 
-UPLOAD SU SERVER / SCAMBIO FILE TRA CLIENT E SERVER:
+UPLOAD SU SERVER:
 - mostare codice e spiegarlo nel dettaglio -> aprire il codice sorgente
 - Perchè si è scelto TCP -> Protocollo affidabile e NON sicuro
 - Aprire wireshark per analizzare il traffico di rete 
@@ -135,8 +135,118 @@ UPLOAD SU SERVER / SCAMBIO FILE TRA CLIENT E SERVER:
 ------------------
 
 
+CHAT PUB/SUB:
+- Simulare e mostrare il funzionamento
+- Che cosa sono + e # per quanto riguarda i TOPIC GERARCHICI
+- Spiegare differenza tra il + e # -> Uno lavora sui PRE-FISSI ( +/.. ) e l'altro sul POST-FISSI ( ../../# ) -> ERA lo scopo dell'Esercizio
+- Spiegare le differenti qualità del servizio -> ( At Most One - At Least One - Exactly One )
+- Come scelgo una o l'altra? -> Introduco dei pacchetti a lvl TCP che chiaramente vanno ad occupare la rete
+- Che protocollo viene utilizzato per implementare PUB/SUB? -> Si utilizza il TCP sotto ad MQTT 
+- Differenza a lvl di traffico di rete tra i vari livelli? Qual'è il meno trafficato? -> Qo0
+- A che cosa serve il Qo0, sembra una contraddizione...Perchè -> lvl TCP mi garantisce sulla singola tratta e NON end to end -> Gli attori qui sono 3
+- Cosa potrebbe andare storto? Fare un esempio -> Va giù il BROKER quando ha in pancia il dato ( non riesco più a recuperarlo )
+- Preparare un discorso di un certificato digitale -> che cos'è, cosa contiene
+- spiegare nel dettaglio che cosa contiene -> coppia nome-host<->IP, scadenza, firma della CA, chiave pubblica di chi vuole essere certificato
+- Vogliamio certificare la COPPIA ( X<->IP ) -> X = nome-host
+- Cosa rende valido un certificato? -> La firma digitale ( con la sua chiave privata ) della CA ( Certification Autority )
+- Cosa me ne faccio di questo certificato? -> Viene utilizzato nel protocollo di sfida per autenticare il server
+- Se uno mi clonasse il sito che cosa crollerebbe? -> La coppia nome-host<->IP e non riuscirebbe a fornirmi un certificato valido perchè nessuno glielo firmerebbe
 
+
+------------------
+
+
+SCAMBIO FILE TRA CLIENT E SERVER:
+- Fare una simulazione e commentare che cosa sta succedendo
+- Vediamo com'è fatto il serer -> Spiegarlo e commentare
+- Secondo quale protocollo è stata fatta la richiesta? -> Protocollo HTTP 
+- Cosa usiamo a livello trasporto? -> Viene creata la connessione TCP, e può passare qualsiasi cosa
+- Com'è fatta la richiesta HTTP? -> c'è il metodo ( Si trova nell'header )
+- Cosa c'è nel CORPO? -> Li si trova il file
+- Come faccio a capire che HEADER è finito? -> Linea vuota ( doppio a capo )
+- Andiamo a vedere nel server dove leggo il CORPO
+- Quali sono i problemi di sicurezza che ha questa applicazione? -> Certifico il server, connessione NON cifrata e anche l'INTEGRITÀ
+- Se voglio rendere sicura questa applicazione? -> HTTPS
+- Cosa fa HTTPS oltre ad aggiungere la cifratura? -> Autenticazione del SERVER
+- Come va implementato HTTPS? -> Aggiungo lo strato ( protocollo ) di TLS/SSL
+- Dove viene aggiunto lo strato di TLS/SSL? -> Tra TCP e HTTP
+- Quali altri comandi abbiamo visto di RETE -> ifconfig, traceroute, ping, whois, nslookup
+- Che cos'è RTT? -> Round Trip Time, tempo che il pacchetto ci ha impiegato per essere inviato e ritornato
+- Che cosa metto come parametro whois -> Indirizzo IP oppure un DOMINIO e mi verrà detto a chi appartiene ( proprio una persona e NON una macchina )
+- Che cosa mi ritorna whois -> WHO-IS, quindi colui che ha registrato il DOMINIO -> Proprio nome e cognome / nome della ditta
+- nslookup vs whois -> nslookup mi fa la traduzione da nome-host ad IP e poi posso applicare whois per vedere chi effettivamente
+
+
+------------------
+
+
+ESEMPIO DEL WEB SERVICES LENTA E VELOCE:
+- Architettura separata tra FRONT-END. e BACK-END. -> mi permette di strutturare al meglio il back-end
+- Quale sarebbe l'alternativa? -> Architettura MONOLITICA
+- Vantaggi di questo approccio? -> delego al srv il calcolo, proprietà intellettuale protetta, modello pay-to-use, eliminazione della pirateria, linguaggi diversi, architetture diverse
+- Avendo più srv arrivo a microservizi, perchè ha senso?
+- come sono strutturate le REST? -> JSON, metodi HTTP, sono molto minimali per la chiamata a funzione remota
+- differenza con java RMI? -> si usa http ( ho già infrastruttura ) e non devo stare li a strutturare e definire Tutto
+- all'interno dell'HTTP c'è un altra alternativa...SOAP -> Si basava sull'XML
+- da che cosa è formata l'intestazione di una funzione? -> ritorno, nome funzione, parametri di input
 
 
 
 ------------------
+
+
+WEB SOCKET CHAT:
+- cosa bisogna fare lato server? -> 
+- Che protocollo parlano all'inizio -> HTTP
+- Cosa fa prima il serer HTTP? -> Fornisce prima le paagine statiche
+- Spiegare cosa serve .css, .html, .js -> stile, struttura della pagina, codice interpretato per programmare il browser
+- Come si collega .html e .js -> Attraverso DOM, e nel javascript tramite ID dell'elemento
+- Tutto ciò in HTTP, fino che ad un certo punto tramite socket
+- Che cosa succede? -> PROTOCOL UPGRADE, smetto di parlare HTTP ed inizio in WEB SOCKET
+- da li in poi? -> Cambia il modo di comunicare ( ho un full duplex e NON più richiesta/risposta di client/server ) 
+- Server fa il push ed inoltra i messaggi a tutti i collegati
+- Cosa fa il server? -> Tiene traccia degli IP perchè le connessioni TCP rimangono aperte
+- Potrebbe essere un problema? -> Si perchè il NAT potrebbe dimenticarsi dall'associazione e quindi devo mandare il messaggio di KEEP ALIVE
+- Scopo del KEEP ALIVE? -> ricordare al NAT che la comunicazione è ancora attiva e serve
+- Valore del certificato sta nella firma digitale della CA -> 
+- Quando finisce la CATENA DELLE C.A. ? -> quando trovo un CA fidata alla quale ci si fida
+- Modalità sulla PKI, alternative? -> Blockchain, un db immutabile e distribuito
+- su che cosa si basa la fiducia? -> Non c'è gerarchia ed è peer to peer, e la fiducia si basa sul fatto che magari un nodo si riesce a corrompere ma NON tutti
+
+
+
+------------------
+
+
+
+PROGRAMMA NUMERI PRIMI ( REST ):
+- Eseguire test, spiegare come funziona e che strategie vengono utilizzate
+- come fa a 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+
+
+
+------------------
+
+
+
+TRASFERIMENTO FILE ( tramite interfaccia socket):
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
