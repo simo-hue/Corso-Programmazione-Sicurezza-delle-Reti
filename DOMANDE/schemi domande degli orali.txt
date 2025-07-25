@@ -72,7 +72,6 @@ CERTIFICATI CA
 
 
 
-
 1)Esercizio sull’upload dei file
 
 2)Firewall - IDS
@@ -89,3 +88,38 @@ CERTIFICATI CA
 - differenze tra sistema client/server e PUB/SUB;
 - vulnerabilità PUB/SUB;
 - vulnerabilità che distingue il modello PUB/SUB rispetto all’integrità dei dati e al TLS (boh😂)
+
+
+------------------
+
+
+REST ottimizzato e NON
+- cosa permette di fare questo modo di operare ( SOA )
+- Pro e contro 
+- Firewall e Intrusion Detection System
+- Dove viene messo il Firewall -> Router di frontiera
+- Dove si applica IDS -> Interno alla rete
+- Perchè si deve aprire in ROOT wireshark? -> Altrimenti non posso fare la cattura ma solamente analizzare le mie catture
+
+
+------------------
+
+
+CHAT WEB SOCKET:
+- come funziona
+- cosa permetted di fare rispetto ad HTTP -> Canale full duplex ( BIDIREZIONALE ) senza che server deve aspettare le richieste del client
+- che tipo di programmazione è -> tipo reattivo rispetto a batch
+- Come viene fatta l'autenticazione -
+- che tipo di autenticazione remota esiste -> Diretta ed INDIRETTA
+
+
+
+------------------
+
+
+UPLOAD SU SERVER / SCAMBIO FILE TRA CLIENT E SERVER:
+- mostare codice e spiegarlo nel dettaglio -> aprire il codice sorgente
+- Perchè si è scelto TCP -> Protocollo affidabile e NON sicuro
+- Aprire wireshark per analizzare il traffico di rete 
+- Che filtro posso applicare? E perchè ?
+- Come posso vedere tutta la connessione e non pacchetto per pacchetto? -> FUNZIONALITÀ di FOLLOW TCP STREAM

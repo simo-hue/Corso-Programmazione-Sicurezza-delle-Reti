@@ -101,7 +101,6 @@ float calcolaSomma(float val1, float val2) {
 
 /**
  * Funzione per il calcolo dei numeri primi
- * Usa il formato legacy /numeri-primi per compatibilità
  */
 int numeriPrimi(float a, float b) {
     char response[MTU * 4]; // Buffer più grande per liste lunghe
