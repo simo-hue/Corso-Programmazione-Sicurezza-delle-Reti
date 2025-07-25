@@ -21,7 +21,7 @@ FILTRI PER WIRESHARK:
 
 MIA PROVA:
     TERMINALE(1) -> mosquitto_sub -h localhost -t test/topic
-    TERMINALE(2) -> mosquitto_pub -h localhost -t test/topic -m "Hello MQTT"
+    TERMINALE(2) -> mosquitto_pub -h localhost -t test/topic -m "Sto facendo l'esame"
 
 ESEMPIO PROF:
     TERMINALE(1) -> mosquitto_sub -t temperatura -h 90.147.167.187 -p 8883 -u univr-studenti -P MQTT-esercitazione2024 --cafile ISRG_Root_X1.pem --insecure -d
